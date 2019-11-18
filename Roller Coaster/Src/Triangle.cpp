@@ -14,12 +14,31 @@ void Triangle::DimensionTransformation(GLfloat source[],GLfloat target[][4])
 			i++;
 		}
 }
+void Triangle::changeLightScale()
+{
+	if (lightScale>=1.0||lightScale<=0.0)
+	{
+		changeLightScaleRate *= -1;
+	}
+	lightScale += changeLightScaleRate;
+	for (size_t i = 0; i < lightScaleColors.size(); i++)
+	{
+		lightScaleColors[i].setX(colors[i].x() * lightScale);
+		lightScaleColors[i].setY(colors[i].y() * lightScale);
+		lightScaleColors[i].setZ(colors[i].z() * lightScale);
+	}
+	cvbo.bind();
+	cvbo.allocate(lightScaleColors.constData(), lightScaleColors.size() * sizeof(QVector3D));
+	cvbo.release();
+}
 void Triangle::Paint(GLfloat* ProjectionMatrix, GLfloat* ModelViewMatrix)
 {
 	GLfloat P[4][4];
 	GLfloat MV[4][4];
 	DimensionTransformation(ProjectionMatrix,P);
 	DimensionTransformation(ModelViewMatrix,MV);
+
+	changeLightScale();
 
 	//Bind the shader we want to draw with
 	shaderProgram->bind();
@@ -92,6 +111,9 @@ void Triangle::InitVBO()
 	colors<<QVector3D(0.0f,1.0f,0.0f)
 		  <<QVector3D(1.0f,0.0f,0.0f)
 		  <<QVector3D(0.0f,0.0f,1.0f);
+	lightScale = 1.0;
+	changeLightScaleRate = 0.01;
+	lightScaleColors = colors;
 	// Create Buffer for color
 	cvbo.create();
 	// Bind the buffer so that it is the current active buffer.
@@ -99,7 +121,8 @@ void Triangle::InitVBO()
 	// Since we will never change the data that we are about to pass the Buffer, we will say that the Usage Pattern is StaticDraw
 	cvbo.setUsagePattern(QOpenGLBuffer::StaticDraw);
 	// Allocate and initialize the information
-	cvbo.allocate(colors.constData(),colors.size() * sizeof(QVector3D));
+	//cvbo.allocate(colors.constData(), colors.size() * sizeof(QVector3D));
+	cvbo.allocate(lightScaleColors.constData(), lightScaleColors.size() * sizeof(QVector3D));
 
 }
 void Triangle::InitShader(QString vertexShaderPath,QString fragmentShaderPath)

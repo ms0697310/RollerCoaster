@@ -22,6 +22,9 @@ public:
 	QOpenGLBuffer vvbo;
 	QOpenGLBuffer cvbo;
 
+	float lightScale;
+	float changeLightScaleRate;
+	QVector<QVector3D> lightScaleColors;
 public:
 	Triangle();
 	void Init();
@@ -30,4 +33,6 @@ public:
 	void InitShader(QString vertexShaderPath,QString fragmentShaderPath);
 	void Paint(GLfloat* ProjectionMatrix, GLfloat* ModelViewMatrix);
 	void DimensionTransformation(GLfloat source[],GLfloat target[][4]);
+
+	void changeLightScale();
 };
