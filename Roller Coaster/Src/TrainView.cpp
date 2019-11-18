@@ -140,6 +140,7 @@ void TrainView::paintGL()
  	glGetFloatv(GL_PROJECTION_MATRIX,ProjectionMatrex);
 
 	//Call triangle's render function, pass ModelViewMatrex and ProjectionMatrex
+	triangle->changColor();
  	triangle->Paint(ProjectionMatrex,ModelViewMatrex);
     
 	//we manage textures by Trainview class, so we modify square's render function

@@ -30,4 +30,8 @@ public:
 	void InitShader(QString vertexShaderPath,QString fragmentShaderPath);
 	void Paint(GLfloat* ProjectionMatrix, GLfloat* ModelViewMatrix);
 	void DimensionTransformation(GLfloat source[],GLfloat target[][4]);
+	void changColor();
+private:
+	double colorWeight;
+	bool colorMode;
 };

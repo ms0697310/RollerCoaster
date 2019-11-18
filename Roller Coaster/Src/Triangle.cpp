@@ -1,6 +1,6 @@
 #include "Triangle.h"
 
-Triangle::Triangle()
+Triangle::Triangle() :colorWeight(0)
 {
 }
 void Triangle::DimensionTransformation(GLfloat source[],GLfloat target[][4])
@@ -13,6 +13,23 @@ void Triangle::DimensionTransformation(GLfloat source[],GLfloat target[][4])
 			target[j][k] = source[i];
 			i++;
 		}
+}
+void Triangle::changColor()
+{
+	//Set each vertex's color
+	if (colorWeight > 0.995) colorMode = false;
+	else if (colorWeight < 0.005) colorMode = true;
+	if (colorMode) colorWeight += 0.001;
+	else colorWeight -= 0.001;
+
+
+	colors[0][1] = 1.0f - colorWeight;
+	colors[1][0] = 1.0f - colorWeight;
+	colors[2][2] = 1.0f - colorWeight;
+
+	cvbo.bind();
+	cvbo.allocate(colors.constData(), colors.size() * sizeof(QVector3D));
+	cvbo.release();
 }
 void Triangle::Paint(GLfloat* ProjectionMatrix, GLfloat* ModelViewMatrix)
 {
