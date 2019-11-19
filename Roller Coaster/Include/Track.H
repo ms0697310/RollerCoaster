@@ -53,7 +53,8 @@ class CTrack {
 		// read and write to files
 		void readPoints(const char* filename);
 		void writePoints(const char* filename);
-		void drawTrack(GLfloat*, GLfloat*);
+		void drawTrack();
+		void drawTile(Pnt3f, double);
 
 	public:
 		// rather than have generic objects, we make a special case for these few
@@ -72,14 +73,19 @@ class CTrack {
 		void DimensionTransformation(GLfloat source[], GLfloat target[][4]);
 		void InitShader(QString vertexShaderPath, QString fragmentShaderPath);
 		void drawInit();
-
+		void drawBegin(GLfloat*, GLfloat*);
+		void drawEnd();
 public:
 	QOpenGLShaderProgram* shaderProgram;
 	QOpenGLShader* vertexShader;
 	QOpenGLShader* fragmentShader;
 	QVector<QVector3D> vertices;
+	QVector<QVector3D> tile;
 	QVector<QVector3D> colors;
+	QVector<QVector3D> tcolors;
 	QOpenGLVertexArrayObject vao;
 	QOpenGLBuffer vvbo;
 	QOpenGLBuffer cvbo;
+	QOpenGLBuffer tvbo;
+	QOpenGLBuffer ctvbo;
 };
