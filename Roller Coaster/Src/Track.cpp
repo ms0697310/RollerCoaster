@@ -298,10 +298,10 @@ void CTrack::drawTile(Pnt3f p, double slope)
 			QVector3D(p.x - xH + xW, p.y + y, p.z - zH + zW)
 		},
 		{
-			QVector3D(p.x + xH + xW, p.y - y, p.z + zH + zW),
-			QVector3D(p.x + xH - xW, p.y - y, p.z + zH - zW),
-			QVector3D(p.x - xH - xW, p.y - y, p.z - zH - zW),
-			QVector3D(p.x - xH + xW, p.y - y, p.z - zH + zW)
+			QVector3D(p.x + xH + xW, p.y, p.z + zH + zW),
+			QVector3D(p.x + xH - xW, p.y, p.z + zH - zW),
+			QVector3D(p.x - xH - xW, p.y, p.z - zH - zW),
+			QVector3D(p.x - xH + xW, p.y, p.z - zH + zW)
 		},
 	};
 	for (int i = 0; i < 4; i++) tile << area[0][i];
@@ -349,9 +349,17 @@ void CTrack::drawLinear(GLfloat* ProjectionMatrix, GLfloat* ModelViewMatrix)
 
 	drawTrack();
 
-	for (int i = 0; i <= points.size(); i++) {
-		Pnt3f p = points[i % points.size()].pos;
-		drawTile(p, 1);
+	for (int i = 0; i < points.size(); i++) {
+		Pnt3f p1 = points[i].pos, p2 = points[(i + 1) % points.size()].pos;
+		double rateX = p2.x - p1.x, rateY = p2.y - p1.y, rateZ = p2.z - p1.z;
+		if (rateX == 0) rateX += 0.000001;
+		double rate = 4 / pow((rateX * rateX + rateY * rateY + rateZ * rateZ), 1.0 / 3);
+		rateX *= rate;
+		rateY *= rate;
+		rateZ *= rate;
+		double x = p1.x + rateX / 2, y = p1.y + rateY / 2, z = p1.z + rateZ / 2;
+		for (; (rateX > 0) ? ((x + rateX / 2) < p2.x) : ((x + rateX / 2) > p2.x) ; x += rateX, y += rateY, z += rateZ)
+			drawTile(Pnt3f(x, y, z), rateZ / rateX);
 	}
 	drawEnd();
 }
