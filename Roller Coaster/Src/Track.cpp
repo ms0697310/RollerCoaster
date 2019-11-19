@@ -215,6 +215,7 @@ void CTrack::drawTrack()
 	shaderProgram->setAttributeArray(1, GL_FLOAT, 0, 3, NULL);
 	cvbo.release();
 
+	glLineWidth(3);
 	glDrawArrays(GL_LINE_STRIP, 0, vertices.size());
 	shaderProgram->disableAttributeArray(0);
 	shaderProgram->disableAttributeArray(1);
@@ -257,6 +258,8 @@ void CTrack::drawInit()
 	vao.create();
 	vvbo.create();
 	cvbo.create();
+	tvbo.create();
+	ctvbo.create();
 }
 
 void CTrack::drawBegin(GLfloat* ProjectionMatrix, GLfloat* ModelViewMatrix)
@@ -280,8 +283,6 @@ void CTrack::drawEnd()
 void CTrack::drawTile(Pnt3f p, double slope)
 {
 	tile.clear();
-	tvbo.create();
-	ctvbo.create();
 
 	double slopeR = -1 / slope;
 	double rate = sqrt((slope * slope + 1));
@@ -317,7 +318,7 @@ void CTrack::drawTile(Pnt3f p, double slope)
 	tvbo.release();
 	
 	for (int i = tcolors.size() - 1; i < tile.size(); i++) {
-		tcolors << QVector3D(0.7, 0.3, 0.2);
+		tcolors << QVector3D(0.8, 0.5, 0.2);
 	}
 	ctvbo.bind();
 	ctvbo.setUsagePattern(QOpenGLBuffer::StaticDraw);
@@ -344,7 +345,7 @@ void CTrack::drawLinear(GLfloat* ProjectionMatrix, GLfloat* ModelViewMatrix)
 
 	//track color
 	for (int i = colors.size() - 1; i < vertices.size(); i++) {
-		colors << QVector3D(1, 0, 0);
+		colors << QVector3D(0.6, 0.3, 0.1);
 	}
 
 	drawTrack();
