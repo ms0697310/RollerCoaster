@@ -4,7 +4,7 @@ TrainView::TrainView(QWidget *parent) :
 QGLWidget(parent)  
 {  
 	resetArcball();
-	
+	DIVIDE_LINE = 100;
 }  
 TrainView::~TrainView()  
 {}  
@@ -240,7 +240,7 @@ void TrainView::drawStuff(bool doingShadows)
 	// TODO: 
 	// call your own track drawing code
 	//####################################################################
-
+	drawTrack(doingShadows);
 #ifdef EXAMPLE_SOLUTION
 	drawTrack(this, doingShadows);
 #endif
@@ -255,6 +255,63 @@ void TrainView::drawStuff(bool doingShadows)
 	if (!tw->trainCam->value())
 		drawTrain(this, doingShadows);
 #endif
+}
+
+void TrainView::drawTrack(bool doingShadows)
+{
+	spline_t type_spline = (spline_t)curve;
+	for (size_t i = 0; i < m_pTrack->points.size(); ++i)
+	{
+		// pos
+		Pnt3f cp_pos_p1 = m_pTrack->points[i].pos;
+		Pnt3f cp_pos_p2 = m_pTrack->points[(i + 1) % m_pTrack->points.size()].pos;
+		// orient
+		Pnt3f cp_orient_p1 = m_pTrack->points[i].orient;
+		Pnt3f cp_orient_p2 = m_pTrack->points[(i + 1) % m_pTrack->points.size()].orient;
+
+		float percent = 1.0f / DIVIDE_LINE;
+		float t = 0;
+		Pnt3f qt,orient_t;
+		qt = cp_pos_p1;
+		for (size_t j = 0; j < DIVIDE_LINE; j++) {
+			Pnt3f qt0 = qt;
+			switch (type_spline) {
+			case spline_Linear:
+				orient_t = (1 - t) * cp_orient_p1 + t * cp_orient_p2;
+				break;
+			}
+			t += percent;
+			switch (type_spline) {
+			case spline_Linear:
+				qt = (1 - t) * cp_pos_p1 + t * cp_pos_p2;
+				break;
+			}
+			Pnt3f qt1 = qt;
+			glLineWidth(3);
+			glBegin(GL_LINES);
+			if (!doingShadows) {
+				glColor3ub(32, 32, 64);
+			}
+			// cross
+			orient_t.normalize();
+			Pnt3f cross_t = (qt1 - qt0) * orient_t;
+			cross_t.normalize();
+			cross_t = cross_t * 2.5f;
+
+			glVertex3f(qt0.x + cross_t.x, qt0.y + cross_t.y, qt0.z + cross_t.z);
+			glVertex3f(qt1.x + cross_t.x, qt1.y + cross_t.y, qt1.z + cross_t.z);
+
+			glVertex3f(qt0.x - cross_t.x, qt0.y - cross_t.y, qt0.z - cross_t.z);
+			glVertex3f(qt1.x - cross_t.x, qt1.y - cross_t.y, qt1.z - cross_t.z);
+
+			glEnd();
+			glLineWidth(1);
+
+		}
+
+
+
+	}
 }
 
 void TrainView::

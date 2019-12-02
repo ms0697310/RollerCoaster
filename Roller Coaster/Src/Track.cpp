@@ -174,3 +174,4 @@ writePoints(const char* filename)
 		fclose(fp);
 	}
 }
+

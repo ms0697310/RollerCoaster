@@ -38,6 +38,7 @@ public:
 	// it has to be encapsulated, since we draw differently if
 	// we're drawing shadows (no colors, for example)
 	void drawStuff(bool doingShadows=false);
+	void drawTrack(bool doingShadows);
 
 	// setup the projection - assuming that the projection stack has been
 	// cleared for you
@@ -59,6 +60,15 @@ public:
 
 	CTrack*			m_pTrack;		// The track of the entire scene
 
+	float t_time;
+	unsigned int DIVIDE_LINE;
+	typedef enum {
+		spline_Linear = 0,
+		spline_CardinalCubic = 1,
+		spline_CubicB_Spline = 2
+	} spline_t;
+
+
 	int camera;
 	int curve;
 	int track;
@@ -68,6 +78,7 @@ public:
 	GLfloat ProjectionMatrex[16];
 	GLfloat ModelViewMatrex[16];
 	QVector<QOpenGLTexture*> Textures;
+
 
 };  
 #endif // TRAINVIEW_H  
