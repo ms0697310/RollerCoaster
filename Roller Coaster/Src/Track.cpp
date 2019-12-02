@@ -188,37 +188,51 @@ void CTrack::DimensionTransformation(GLfloat source[], GLfloat target[][4])
 		}
 }
 
-void CTrack::drawTrack()
+void CTrack::drawTrack(GLfloat* ProjectionMatrix, GLfloat* ModelViewMatrix)
 {
-	// GLfloat P[4][4];
-	// GLfloat MV[4][4];
-	// DimensionTransformation(ProjectionMatrix, P);
-	// DimensionTransformation(ModelViewMatrix, MV);
+	GLfloat P[4][4];
+	GLfloat MV[4][4];
+	DimensionTransformation(ProjectionMatrix, P);
+	DimensionTransformation(ModelViewMatrix, MV);
 
-	// shaderProgram->bind();
-	// vao.bind();
-	// 
-	// shaderProgram->setUniformValue("ProjectionMatrix", P);
-	// shaderProgram->setUniformValue("ModelViewMatrix", MV);
+	//Bind the shader we want to draw with
+	shaderProgram->bind();
+	//Bind the VAO we want to draw
+	vao.bind();
 
+	//pass projection matrix to shader
+	shaderProgram->setUniformValue("ProjectionMatrix", P);
+	//pass modelview matrix to shader
+	shaderProgram->setUniformValue("ModelViewMatrix", MV);
+
+	// Bind the buffer so that it is the current active buffer.
 	vvbo.bind();
-	vvbo.setUsagePattern(QOpenGLBuffer::StaticDraw);
-	vvbo.allocate(vertices.constData(), vertices.size() * sizeof(QVector3D));
+	// Enable Attribute 0
 	shaderProgram->enableAttributeArray(0);
+	// Set Attribute 0 to be position
 	shaderProgram->setAttributeArray(0, GL_FLOAT, 0, 3, NULL);
+	//unbind buffer
 	vvbo.release();
 
+	// Bind the buffer so that it is the current active buffer
 	cvbo.bind();
-	cvbo.setUsagePattern(QOpenGLBuffer::StaticDraw);
-	cvbo.allocate(colors.constData(), colors.size() * sizeof(QVector3D));
+	// Enable Attribute 1
 	shaderProgram->enableAttributeArray(1);
+	// Set Attribute 0 to be color
 	shaderProgram->setAttributeArray(1, GL_FLOAT, 0, 3, NULL);
+	//unbind buffer
 	cvbo.release();
 
+	//Draw a triangle with 3 indices starting from the 0th index
 	glDrawArrays(GL_LINE_STRIP, 0, vertices.size());
+	//Disable Attribute 0&1
 	shaderProgram->disableAttributeArray(0);
 	shaderProgram->disableAttributeArray(1);
 
+	//unbind vao
+	vao.release();
+	//unbind vao
+	shaderProgram->release();
 }
 
 void CTrack::InitShader(QString vertexShaderPath, QString fragmentShaderPath)
@@ -255,103 +269,30 @@ void CTrack::drawInit()
 {
 	InitShader("./Shader/CTrack.vs", "./Shader/CTrack.fs");
 	vao.create();
-	vvbo.create();
 	cvbo.create();
-}
-
-void CTrack::drawBegin(GLfloat* ProjectionMatrix, GLfloat* ModelViewMatrix)
-{
-	GLfloat P[4][4];
-	GLfloat MV[4][4];
-	DimensionTransformation(ProjectionMatrix, P);
-	DimensionTransformation(ModelViewMatrix, MV);
-	shaderProgram->bind();
-	shaderProgram->setUniformValue("ProjectionMatrix", P);
-	shaderProgram->setUniformValue("ModelViewMatrix", MV);
-	vao.bind();
-}
-
-void CTrack::drawEnd()
-{
-	vao.release();
-	shaderProgram->release();
-}
-
-void CTrack::drawTile(Pnt3f p, double slope)
-{
-	tile.clear();
-	tvbo.create();
-	ctvbo.create();
-
-	double slopeR = -1 / slope;
-	double rate = sqrt((slope * slope + 1));
-	double rateR = sqrt((slopeR * slopeR + 1));
-	double xW = 3 / rate, xH = 8 / rateR;
-	double zW = slope * xW, zH = slopeR * xH;
-	double y = 2;
-
-	QVector3D area[2][4] = {
-		{
-			QVector3D(p.x + xH + xW, p.y + y, p.z + zH + zW), 
-			QVector3D(p.x + xH - xW, p.y + y, p.z + zH - zW), 
-			QVector3D(p.x - xH - xW, p.y + y, p.z - zH - zW), 
-			QVector3D(p.x - xH + xW, p.y + y, p.z - zH + zW)
-		},
-		{
-			QVector3D(p.x + xH + xW, p.y - y, p.z + zH + zW),
-			QVector3D(p.x + xH - xW, p.y - y, p.z + zH - zW),
-			QVector3D(p.x - xH - xW, p.y - y, p.z - zH - zW),
-			QVector3D(p.x - xH + xW, p.y - y, p.z - zH + zW)
-		},
-	};
-	for (int i = 0; i < 4; i++) tile << area[0][i];
-	for (int i = 0; i < 4; i++) tile << area[0][i] << area[0][(i + 1) % 4] << area[1][(i + 1) % 4] << area[1][i];
-	for(int i = 0; i < 4; i++) tile << area[1][i];
-	
-	tvbo.bind();
-	tvbo.setUsagePattern(QOpenGLBuffer::StaticDraw);
-	tvbo.allocate(tile.constData(), tile.size() * sizeof(QVector3D));
-
-	shaderProgram->enableAttributeArray(0);
-	shaderProgram->setAttributeArray(0, GL_FLOAT, 0, 3, NULL);
-	tvbo.release();
-	
-	for (int i = tcolors.size() - 1; i < tile.size(); i++) {
-		tcolors << QVector3D(0.7, 0.3, 0.2);
-	}
-	ctvbo.bind();
-	ctvbo.setUsagePattern(QOpenGLBuffer::StaticDraw);
-	ctvbo.allocate(tcolors.constData(), tcolors.size() * sizeof(QVector3D));
-	shaderProgram->enableAttributeArray(1);
-	shaderProgram->setAttributeArray(1, GL_FLOAT, 0, 3, NULL);
-	ctvbo.release();
-	
-	glDrawArrays(GL_QUADS, 0, tile.size());
-	shaderProgram->disableAttributeArray(0);
-	shaderProgram->disableAttributeArray(1);
+	vvbo.create();
+	//vao.bind();
 }
 
 void CTrack::drawLinear(GLfloat* ProjectionMatrix, GLfloat* ModelViewMatrix)
 {
-	drawBegin(ProjectionMatrix,  ModelViewMatrix);
 	vertices.clear();
-	
-	//track
+	colors.clear();
+	vao.bind();
 	for (int i = 0; i <= points.size(); i++) {
 		Pnt3f p = points[i % points.size()].pos;
 		vertices << QVector3D(p.x, p.y, p.z);
 	}
-
-	//track color
-	for (int i = colors.size() - 1; i < vertices.size(); i++) {
+	vvbo.bind();
+	vvbo.setUsagePattern(QOpenGLBuffer::StaticDraw);
+	vvbo.allocate(vertices.constData(), vertices.size() * sizeof(QVector3D));
+	vvbo.release();
+	for (int i = 0; i <= points.size(); i++) {
 		colors << QVector3D(1, 0, 0);
 	}
-
-	drawTrack();
-
-	for (int i = 0; i <= points.size(); i++) {
-		Pnt3f p = points[i % points.size()].pos;
-		drawTile(p, 1);
-	}
-	drawEnd();
+	cvbo.bind();
+	cvbo.setUsagePattern(QOpenGLBuffer::StaticDraw);
+	cvbo.allocate(colors.constData(), colors.size() * sizeof(QVector3D));
+	cvbo.release();
+	drawTrack(ProjectionMatrix, ModelViewMatrix);
 }
