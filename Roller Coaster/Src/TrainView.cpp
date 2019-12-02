@@ -15,14 +15,13 @@ void TrainView::initializeGL()
 	triangle = new Triangle();
 	//Initialize the triangle object
 	triangle->Init();
-
-	m_pTrack->drawInit();
 	//Create a square object
 	square = new Square();
 	//Initialize the square object
 	square->Init();
 	//Initialize texture 
 	initializeTexture();
+	
 }
 void TrainView::initializeTexture()
 {
@@ -142,7 +141,6 @@ void TrainView::paintGL()
 
 	//Call triangle's render function, pass ModelViewMatrex and ProjectionMatrex
  	triangle->Paint(ProjectionMatrex,ModelViewMatrex);
-	m_pTrack->drawLinear(ProjectionMatrex, ModelViewMatrex);
     
 	//we manage textures by Trainview class, so we modify square's render function
 	square->Begin();
@@ -242,6 +240,7 @@ void TrainView::drawStuff(bool doingShadows)
 	// TODO: 
 	// call your own track drawing code
 	//####################################################################
+
 #ifdef EXAMPLE_SOLUTION
 	drawTrack(this, doingShadows);
 #endif

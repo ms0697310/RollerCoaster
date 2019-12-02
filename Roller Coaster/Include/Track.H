@@ -31,12 +31,6 @@ using std::vector; // avoid having to say std::vector all of the time
 
 // make use of other data structures from this project
 #include "ControlPoint.H"
-#include <QtOpenGL>  
-#include <QGLWidget> 
-#include <QtGui>  
-#include <QtOpenGL>  
-#include <GL/GLU.h>
-
 
 class CTrack {
 	public:		
@@ -53,7 +47,6 @@ class CTrack {
 		// read and write to files
 		void readPoints(const char* filename);
 		void writePoints(const char* filename);
-		void drawTrack(GLfloat*, GLfloat*);
 
 	public:
 		// rather than have generic objects, we make a special case for these few
@@ -67,19 +60,4 @@ class CTrack {
 		// the state of the train - basically, all I need to remember is where
 		// it is in parameter space
 		float trainU;
-
-		void drawLinear(GLfloat*, GLfloat*);
-		void DimensionTransformation(GLfloat source[], GLfloat target[][4]);
-		void InitShader(QString vertexShaderPath, QString fragmentShaderPath);
-		void drawInit();
-
-public:
-	QOpenGLShaderProgram* shaderProgram;
-	QOpenGLShader* vertexShader;
-	QOpenGLShader* fragmentShader;
-	QVector<QVector3D> vertices;
-	QVector<QVector3D> colors;
-	QOpenGLVertexArrayObject vao;
-	QOpenGLBuffer vvbo;
-	QOpenGLBuffer cvbo;
 };
