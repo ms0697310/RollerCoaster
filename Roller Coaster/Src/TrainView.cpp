@@ -308,10 +308,9 @@ void TrainView::drawTrack(bool doingShadows)
 
 		float percent = 1.0f / DIVIDE_LINE;
 		float t = 0;
-		Pnt3f qt,orient_t;
-		qt = cp_pos_p1;
+		Pnt3f qt,orient_t, qt00, qt01;
+		qt00 = qt01 = qt = cp_pos_p1;
 		for (size_t j = 0; j < DIVIDE_LINE; j++) {
-			
 			Pnt3f qt0 = qt;
 			t += percent; 
 			float tMatrix[][1] =
@@ -374,11 +373,14 @@ void TrainView::drawTrack(bool doingShadows)
 			cross_t.normalize();
 			cross_t = cross_t * 2.5f;
 
-			glVertex3f(qt0.x + cross_t.x, qt0.y + cross_t.y, qt0.z + cross_t.z);
+			glVertex3f(qt00.x, qt00.y, qt00.z);
 			glVertex3f(qt1.x + cross_t.x, qt1.y + cross_t.y, qt1.z + cross_t.z);
 
-			glVertex3f(qt0.x - cross_t.x, qt0.y - cross_t.y, qt0.z - cross_t.z);
+			glVertex3f(qt01.x, qt01.y, qt01.z);
 			glVertex3f(qt1.x - cross_t.x, qt1.y - cross_t.y, qt1.z - cross_t.z);
+
+			qt00 = qt1 + cross_t;
+			qt01 = qt1 - cross_t;
 
 			glEnd();
 			glLineWidth(1);
