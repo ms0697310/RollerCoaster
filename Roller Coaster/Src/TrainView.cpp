@@ -4,7 +4,9 @@ TrainView::TrainView(QWidget *parent) :
 QGLWidget(parent)  
 {  
 	resetArcball();
-	DIVIDE_LINE = 100;
+	DIVIDE_LINE = 500;
+	BOARD_LENGTH = 3;
+	BOARD_DISTANCE_LENGTH = 3;
 }  
 TrainView::~TrainView()  
 {}  
@@ -293,6 +295,11 @@ void TrainView::drawTrack(bool doingShadows)
 	}
 
 	spline_t type_spline = (spline_t)curve;
+	Pnt3f qt0, qt00, qt01, qt, board0, board1;
+	bool started = false;
+	float boardLen = 0;
+	const bool BOARD_MODE = true, TRACK_MODE = false;
+	bool BoardMode = TRACK_MODE;
 	for (size_t i = 0; i < m_pTrack->points.size(); ++i)
 	{
 		// pos
@@ -308,10 +315,10 @@ void TrainView::drawTrack(bool doingShadows)
 
 		float percent = 1.0f / DIVIDE_LINE;
 		float t = 0;
-		Pnt3f qt,orient_t, qt00, qt01;
-		qt00 = qt01 = qt = cp_pos_p1;
+		Pnt3f orient_t;
+		if (!started) qt00 = qt01 = qt = qt;
 		for (size_t j = 0; j < DIVIDE_LINE; j++) {
-			Pnt3f qt0 = qt;
+			qt0 = qt;
 			t += percent; 
 			float tMatrix[][1] =
 			{
@@ -361,30 +368,72 @@ void TrainView::drawTrack(bool doingShadows)
 
 			Pnt3f qt1 = qt;
 
-			if (j == 0)continue;
-			glLineWidth(3);
-			glBegin(GL_LINES);
-			if (!doingShadows) {
-				glColor3ub(32, 32, 64);
-			}
-			// cross
 			orient_t.normalize();
-			Pnt3f cross_t = (qt1 - qt0) * orient_t;
+			Pnt3f diff = (qt1 - qt0);
+
+			Pnt3f cross_t = diff * orient_t;
 			cross_t.normalize();
 			cross_t = cross_t * 2.5f;
+			
+			if (started) {
 
-			glVertex3f(qt00.x, qt00.y, qt00.z);
-			glVertex3f(qt1.x + cross_t.x, qt1.y + cross_t.y, qt1.z + cross_t.z);
+				float len = sqrt((diff.x * diff.x) + (diff.y * diff.y) + (diff.z * diff.z));
+				boardLen += len;
 
-			glVertex3f(qt01.x, qt01.y, qt01.z);
-			glVertex3f(qt1.x - cross_t.x, qt1.y - cross_t.y, qt1.z - cross_t.z);
+				// ­y¹D
+				glLineWidth(4);
+				glBegin(GL_LINES);
+				if (!doingShadows) {
+					glColor3ub(32, 32, 64);
+				}
+				
+				glVertex3f(qt00.x, qt00.y, qt00.z);
+				glVertex3f(qt1.x + cross_t.x, qt1.y + cross_t.y, qt1.z + cross_t.z);
+				
+				glVertex3f(qt01.x, qt01.y, qt01.z);
+				glVertex3f(qt1.x - cross_t.x, qt1.y - cross_t.y, qt1.z - cross_t.z);
+				
+				glEnd();
 
+				// ¤ì±ø
+				Pnt3f cross_b = diff * orient_t;
+				cross_b.normalize();
+				cross_b = cross_b * 3.5f;
+
+				Pnt3f newBoard0 = qt1 + cross_b, newBoard1 = qt1 - cross_b;
+				Pnt3f center0 = (newBoard0 - board0) * 0.5f + board0, center1 = (newBoard1 - board1) * 0.5f + board1;
+				Pnt3f parallel = (newBoard0 - board0);
+				parallel.normalize();
+				parallel = parallel * (BOARD_LENGTH / 2);
+				
+				if (BoardMode == TRACK_MODE && boardLen >= BOARD_LENGTH) {
+					BoardMode = BOARD_MODE;
+					boardLen -= BOARD_LENGTH;
+					board0 = qt1 + cross_b;
+					board1 = qt1 - cross_b;
+				}
+				else if (BoardMode == BOARD_MODE && boardLen >= BOARD_DISTANCE_LENGTH) {
+					BoardMode = TRACK_MODE;
+					boardLen -= BOARD_DISTANCE_LENGTH;
+					glBegin(GL_QUADS);
+					if (!doingShadows) {
+						glColor3ub(255, 255, 255);
+					}
+					// glVertex3f(board0.x, board0.y - 0.1f, board0.z);
+					// glVertex3f(board1.x, board1.y - 0.1f, board1.z);
+					// glVertex3f(qt1.x - cross_b.x, qt1.y - cross_b.y - 0.1f, qt1.z - cross_b.z);
+					// glVertex3f(qt1.x + cross_b.x, qt1.y + cross_b.y - 0.1f, qt1.z + cross_b.z);
+					glVertex3f(center0.x + parallel.x, center0.y + parallel.y - 0.1f, center0.z + parallel.z);
+					glVertex3f(center1.x + parallel.x, center1.y + parallel.y - 0.1f, center1.z + parallel.z);
+					glVertex3f(center1.x - parallel.x, center1.y - parallel.y - 0.1f, center1.z - parallel.z);
+					glVertex3f(center0.x - parallel.x, center0.y - parallel.y - 0.1f, center0.z - parallel.z);
+					glEnd();
+				}
+			}
+			started = true;
 			qt00 = qt1 + cross_t;
 			qt01 = qt1 - cross_t;
-
-			glEnd();
-			glLineWidth(1);
-
+			
 		}
 
 

@@ -62,6 +62,8 @@ public:
 
 	float t_time;
 	unsigned int DIVIDE_LINE;
+	unsigned int BOARD_DISTANCE_LENGTH;
+	unsigned int BOARD_LENGTH;
 	typedef enum {
 		spline_Linear = 0,
 		spline_CardinalCubic = 1,
