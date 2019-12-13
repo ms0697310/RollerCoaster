@@ -30,7 +30,7 @@
 
 *************************************************************************/
 #pragma once
-
+#include <cmath>
 
 class Pnt3f {
 	public:
@@ -54,6 +54,8 @@ class Pnt3f {
 		Pnt3f operator * (const float)	const;  /* scale by scalar */
 		Pnt3f operator + (const Pnt3f&) const;	/* create a temp */
 		Pnt3f operator - (const Pnt3f&) const;	/* create a temp */
+		Pnt3f operator - () const;	/* create a temp */
+		bool operator == (const Pnt3f&) const;	/* compare */
 
 		// make sure that we're unit length - vertical in the error case (0 length)
 		void normalize();
@@ -128,6 +130,28 @@ operator - (const Pnt3f& p) const
 	return Pnt3f(x - p.x, y - p.y, z - p.z);
 };
 
+//*****************************************************************************
+//
+// *
+//=============================================================================
+inline Pnt3f Pnt3f::
+operator - () const
+//=============================================================================
+{
+	return Pnt3f(-x, -y , -z );
+};
+
+//*****************************************************************************
+//
+// *
+//=============================================================================
+inline bool Pnt3f::
+operator == (const Pnt3f& p) const
+//=============================================================================
+{
+	float buffer = 0.0001;
+	return std::abs(x - p.x) <buffer && std::abs(y - p.y) < buffer && std::abs(z - p.z) < buffer;
+};
 
 //*****************************************************************************
 //

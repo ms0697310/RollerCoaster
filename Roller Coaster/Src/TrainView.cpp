@@ -269,7 +269,7 @@ void TrainView::drawTrack(bool doingShadows)
 		{-3,3,3,1},
 		{1,0,0,0}
 	};
-	float CardinalScale = 1;
+	float CardinalScale = 0.5;
 	float CardinalMatrix[][4] =
 	{
 		{-1,2,-1,0},
@@ -312,7 +312,26 @@ void TrainView::drawTrack(bool doingShadows)
 		Pnt3f cp_orient_p1 = m_pTrack->points[i].orient;
 		Pnt3f cp_orient_p2 = m_pTrack->points[(i + 1) % m_pTrack->points.size()].orient;
 		Pnt3f cp_orient_p3 = m_pTrack->points[(i + 2) % m_pTrack->points.size()].orient;
-
+		// 微調角度 防止180度翻轉問題
+		
+		cp_orient_p1.normalize();
+		cp_orient_p2.normalize();
+		if (cp_orient_p2 == -cp_orient_p1)
+		{
+			
+			//若點位置斜率與微調的角度相同，則效果不佳。
+			//故做了斜率判斷以及不同的角度微調。
+			
+			Pnt3f temp = cp_pos_p2 - cp_pos_p1;
+			temp.normalize();
+			if( temp.x / temp.z > 0 )
+			cp_orient_p2 = cp_orient_p2 + Pnt3f(0.1, 0.1,-0.1);
+			else
+			cp_orient_p2 = cp_orient_p2 + Pnt3f(0.1, 0.1, 0.1);
+		}
+		cp_orient_p1.normalize();
+		cp_orient_p2.normalize();
+		// 微調角度END
 		float percent = 1.0f / DIVIDE_LINE;
 		float t = 0;
 		Pnt3f orient_t;
