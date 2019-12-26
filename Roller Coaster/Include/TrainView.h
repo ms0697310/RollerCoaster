@@ -83,8 +83,6 @@ public:
 	QVector<QOpenGLTexture*> Textures;
 
 	spline_t type_spline;
-	Pnt3f qt;
-	Pnt3f orient_t;
 
 	int trainLineIndex;
 	unsigned int trainLineILength;

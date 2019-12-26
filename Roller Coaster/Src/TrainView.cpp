@@ -1,4 +1,5 @@
 #include "TrainView.h"  
+#include "AppMain.h"
 
 TrainView::TrainView(QWidget *parent) :  
 QGLWidget(parent)  
@@ -9,6 +10,7 @@ QGLWidget(parent)
 	BOARD_DISTANCE_LENGTH = 3;
 	trainLineIndex = 0;
 	trainLineILength = 0;
+	t_time = 0;
 }  
 TrainView::~TrainView()  
 {}  
@@ -254,7 +256,8 @@ void TrainView::drawStuff(bool doingShadows)
 	// TODO: 
 	//	call your own train drawing code
 	//####################################################################
-	drawTrain(0);
+	if (isrun) AppMain::getInstance()->advanceTrain();
+	drawTrain(t_time);
 #ifdef EXAMPLE_SOLUTION
 	// don't draw the train if you're looking out the front window
 	if (!tw->trainCam->value())
@@ -299,6 +302,7 @@ void TrainView::drawTrack(bool doingShadows)
 
 	type_spline = (spline_t)curve;
 	Pnt3f qt0, qt00, qt01, board0, board1;
+	Pnt3f qt, orient_t;
 	bool started = false;
 	float boardLen = 0;
 	const bool BOARD_MODE = true, TRACK_MODE = false;
@@ -463,14 +467,16 @@ void TrainView::drawTrack(bool doingShadows)
 void TrainView::drawTrain(float t)
 {
 	t *= m_pTrack->points.size();
-	size_t i;
-	for (i = 0; t > 1; t -= 1, i++) i++;
+	size_t i = t;
+	t -= i;
+	// for (i = 0; t > 1; t -= 1, i++) i++;
 	Pnt3f cp_pos_p1 = m_pTrack->points[i].pos;
 	Pnt3f cp_pos_p2 = m_pTrack->points[(i + 1) % m_pTrack->points.size()].pos;
 
 	// orient
 	Pnt3f cp_orient_p1 = m_pTrack->points[i].orient;
 	Pnt3f cp_orient_p2 = m_pTrack->points[(i + 1) % m_pTrack->points.size()].orient;
+	Pnt3f qt, orient_t;
 	switch (type_spline) {
 	case spline_Linear:
 		// Linear
