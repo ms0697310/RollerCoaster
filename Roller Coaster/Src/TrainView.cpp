@@ -7,6 +7,8 @@ QGLWidget(parent)
 	DIVIDE_LINE = 500;
 	BOARD_LENGTH = 3;
 	BOARD_DISTANCE_LENGTH = 3;
+	trainLineIndex = 0;
+	trainLineILength = 0;
 }  
 TrainView::~TrainView()  
 {}  
@@ -252,6 +254,7 @@ void TrainView::drawStuff(bool doingShadows)
 	// TODO: 
 	//	call your own train drawing code
 	//####################################################################
+	drawTrain(0);
 #ifdef EXAMPLE_SOLUTION
 	// don't draw the train if you're looking out the front window
 	if (!tw->trainCam->value())
@@ -294,8 +297,8 @@ void TrainView::drawTrack(bool doingShadows)
 		}
 	}
 
-	spline_t type_spline = (spline_t)curve;
-	Pnt3f qt0, qt00, qt01, qt, board0, board1;
+	type_spline = (spline_t)curve;
+	Pnt3f qt0, qt00, qt01, board0, board1;
 	bool started = false;
 	float boardLen = 0;
 	const bool BOARD_MODE = true, TRACK_MODE = false;
@@ -334,8 +337,7 @@ void TrainView::drawTrack(bool doingShadows)
 		// ·L½Õ¨¤«×END
 		float percent = 1.0f / DIVIDE_LINE;
 		float t = 0;
-		Pnt3f orient_t;
-		if (!started) qt00 = qt01 = qt = qt;
+		if (!started) qt00 = qt01 = qt;
 		for (size_t j = 0; j < DIVIDE_LINE; j++) {
 			qt0 = qt;
 			t += percent; 
@@ -452,12 +454,41 @@ void TrainView::drawTrack(bool doingShadows)
 			started = true;
 			qt00 = qt1 + cross_t;
 			qt01 = qt1 - cross_t;
-			
 		}
 
 
-
 	}
+}
+
+void TrainView::drawTrain(float t)
+{
+	t *= m_pTrack->points.size();
+	size_t i;
+	for (i = 0; t > 1; t -= 1, i++) i++;
+	Pnt3f cp_pos_p1 = m_pTrack->points[i].pos;
+	Pnt3f cp_pos_p2 = m_pTrack->points[(i + 1) % m_pTrack->points.size()].pos;
+
+	// orient
+	Pnt3f cp_orient_p1 = m_pTrack->points[i].orient;
+	Pnt3f cp_orient_p2 = m_pTrack->points[(i + 1) % m_pTrack->points.size()].orient;
+	switch (type_spline) {
+	case spline_Linear:
+		// Linear
+		qt = (1 - t) * cp_pos_p1 + t * cp_pos_p2;
+		orient_t = (1 - t) * cp_orient_p1 + t * cp_orient_p2;
+		break;
+	}
+	glColor3ub(255, 255, 255);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.0f, 0.0f);
+	glVertex3f(qt.x - 5, qt.y - 5, qt.z - 5);
+	glTexCoord2f(1.0f, 0.0f);
+	glVertex3f(qt.x + 5, qt.y - 5, qt.z - 5);
+	glTexCoord2f(1.0f, 1.0f);
+	glVertex3f(qt.x + 5, qt.y + 5, qt.z - 5);
+	glTexCoord2f(0.0f, 1.0f);
+	glVertex3f(qt.x - 5, qt.y + 5, qt.z - 5);
+	glEnd();
 }
 
 void TrainView::

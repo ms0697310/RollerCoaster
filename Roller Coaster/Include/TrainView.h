@@ -39,6 +39,7 @@ public:
 	// we're drawing shadows (no colors, for example)
 	void drawStuff(bool doingShadows=false);
 	void drawTrack(bool doingShadows);
+	void drawTrain(float);
 
 	// setup the projection - assuming that the projection stack has been
 	// cleared for you
@@ -81,6 +82,12 @@ public:
 	GLfloat ModelViewMatrex[16];
 	QVector<QOpenGLTexture*> Textures;
 
+	spline_t type_spline;
+	Pnt3f qt;
+	Pnt3f orient_t;
+
+	int trainLineIndex;
+	unsigned int trainLineILength;
 
 };  
 #endif // TRAINVIEW_H  
