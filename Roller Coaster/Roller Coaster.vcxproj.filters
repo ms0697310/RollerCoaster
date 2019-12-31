@@ -39,6 +39,9 @@
     <Filter Include="Header Files\Utilities">
       <UniqueIdentifier>{2ec37186-5191-4bbe-99cb-cae9dd6569c6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="LoadObj">
+      <UniqueIdentifier>{2487bc63-0382-4711-a55c-3c30afe59ac0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\qrc_AppMain.cpp">
@@ -86,6 +89,9 @@
     <ClCompile Include="Src\Square.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Include\LoadObj\Model.cpp">
+      <Filter>LoadObj</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="AppMain.ui">
@@ -125,6 +131,9 @@
     </ClInclude>
     <ClInclude Include="Include\Square.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\LoadObj\Model.h">
+      <Filter>LoadObj</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

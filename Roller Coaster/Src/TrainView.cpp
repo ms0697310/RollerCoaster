@@ -1,6 +1,5 @@
 #include "TrainView.h"  
 #include "AppMain.h"
-
 TrainView::TrainView(QWidget *parent) :  
 QGLWidget(parent)  
 {  
@@ -27,7 +26,7 @@ void TrainView::initializeGL()
 	square->Init();
 	//Initialize texture 
 	initializeTexture();
-	
+	train = new Model("./Models/arrow.obj", 100, Pnt3f(0, 0, 0));
 }
 void TrainView::initializeTexture()
 {
@@ -257,7 +256,8 @@ void TrainView::drawStuff(bool doingShadows)
 	//	call your own train drawing code
 	//####################################################################
 	if (isrun) AppMain::getInstance()->advanceTrain();
-	drawTrain(t_time);
+	//drawTrain(t_time);
+	drawTrainObj(t_time);
 #ifdef EXAMPLE_SOLUTION
 	// don't draw the train if you're looking out the front window
 	if (!tw->trainCam->value())
@@ -463,7 +463,38 @@ void TrainView::drawTrack(bool doingShadows)
 
 	}
 }
+void TrainView::drawTrainObj(float t)
+{
+	t *= m_pTrack->points.size();
+	size_t i = t;
+	t -= i;
+	// for (i = 0; t > 1; t -= 1, i++) i++;
+	Pnt3f cp_pos_p1 = m_pTrack->points[i].pos;
+	Pnt3f cp_pos_p2 = m_pTrack->points[(i + 1) % m_pTrack->points.size()].pos;
 
+	// orient
+	Pnt3f cp_orient_p1 = m_pTrack->points[i].orient;
+	Pnt3f cp_orient_p2 = m_pTrack->points[(i + 1) % m_pTrack->points.size()].orient;
+	Pnt3f qt, orient_t;
+	switch (type_spline) {
+	case spline_Linear:
+		// Linear
+		qt = (1 - t) * cp_pos_p1 + t * cp_pos_p2;
+		//orient_t = (1 - t) * cp_orient_p1 + t * cp_orient_p2;
+		//orient_t = (1 - t) * cp_orient_p1 + t * cp_orient_p2;
+		break;
+	}
+	orient_t = train->getPosition().getOrient(qt);
+	train->rotateTo(orient_t);
+	train->moveTo(qt);
+	if ((int)(t * 100) % 10 == 0)
+	{
+		qt += qt;
+	}
+	glColor3ub(255, 255, 255);
+	train->render(false, false);
+
+}
 void TrainView::drawTrain(float t)
 {
 	t *= m_pTrack->points.size();

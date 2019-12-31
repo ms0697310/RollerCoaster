@@ -31,6 +31,7 @@
 *************************************************************************/
 #pragma once
 #include <cmath>
+#include <QtCore/qglobal.h>
 
 class Pnt3f {
 	public:
@@ -53,16 +54,28 @@ class Pnt3f {
 		Pnt3f operator * (const Pnt3f&) const;	/* cross product */
 		Pnt3f operator * (const float)	const;  /* scale by scalar */
 		Pnt3f operator + (const Pnt3f&) const;	/* create a temp */
+		Pnt3f& operator+=(const Pnt3f&);
 		Pnt3f operator - (const Pnt3f&) const;	/* create a temp */
+		Pnt3f& operator-=(const Pnt3f&);
 		Pnt3f operator - () const;	/* create a temp */
 		bool operator == (const Pnt3f&) const;	/* compare */
 
 		// make sure that we're unit length - vertical in the error case (0 length)
-		void normalize();
+		Pnt3f normalize();
+
+		Pnt3f getOrient(const Pnt3f&) const;
 
 		// note - the operators above are for Pnt3f*scalar, here we have scalar*Pnt3f
 		friend Pnt3f operator * (const float s, const Pnt3f& p );
+		float& operator[](unsigned int index) {
+			Q_ASSERT(index < 3);
+			return (&x)[index];
+		}
 
+		const float& operator[](unsigned int index) const {
+			Q_ASSERT(index < 3);
+			return (&x)[index];
+		}
 	public:
 		// for simplicity, we just make this public so everything can access
 		// it. real software engineers would make the internal data private.
@@ -118,6 +131,13 @@ operator + (const Pnt3f& p) const
 {
 	return Pnt3f(x+p.x, y+p.y, z+p.z);
 };
+inline Pnt3f& Pnt3f::operator+=(const Pnt3f& p)
+{
+	x += p.x;
+	y += p.y;
+	z += p.z;
+	return *this;
+}
 
 //*****************************************************************************
 //
@@ -129,7 +149,13 @@ operator - (const Pnt3f& p) const
 {
 	return Pnt3f(x - p.x, y - p.y, z - p.z);
 };
-
+inline Pnt3f& Pnt3f::operator-=(const Pnt3f& p)
+{
+	x -= p.x;
+	y -= p.y;
+	z -= p.z;
+	return *this;
+}
 //*****************************************************************************
 //
 // *
@@ -167,3 +193,12 @@ operator*(const Pnt3f& p) const
 	q.z = p.y * x - p.x * y;
 	return q;
 };
+inline float dot(const Pnt3f& a, const Pnt3f& b)
+{
+	return a.x * b.x + a.y * b.y + a.z * b.z;
+}
+
+inline Pnt3f cross(const Pnt3f& a, const Pnt3f& b)
+{
+	return Pnt3f(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x);
+}

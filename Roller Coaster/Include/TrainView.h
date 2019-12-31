@@ -11,7 +11,8 @@
 #include "Track.H"
 #include "Triangle.h"
 #include "Square.h"
-
+#include "LoadObj/Model.h"
+#include <iostream>
 class AppMain;
 class CTrack;
 
@@ -40,7 +41,8 @@ public:
 	void drawStuff(bool doingShadows=false);
 	void drawTrack(bool doingShadows);
 	void drawTrain(float);
-
+	void drawTrainObj(float);
+	//void drawTrain();
 	// setup the projection - assuming that the projection stack has been
 	// cleared for you
 	void setProjection();
@@ -71,7 +73,7 @@ public:
 		spline_CubicB_Spline = 2
 	} spline_t;
 
-
+	Model* train;
 	int camera;
 	int curve;
 	int track;
