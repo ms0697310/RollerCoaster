@@ -55,7 +55,7 @@ public:
 
 	void initializeGL();
 	void initializeTexture();
-
+	void initSplineMatrix();
 
 public:
 	ArcBallCam		arcball;			// keep an ArcBall for the UI
@@ -88,6 +88,7 @@ public:
 
 	int trainLineIndex;
 	unsigned int trainLineILength;
-
+	float BSplineMatrix[4][4];
+	float CardinalMatrix[4][4];
 };  
 #endif // TRAINVIEW_H  

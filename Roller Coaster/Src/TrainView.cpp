@@ -10,6 +10,7 @@ QGLWidget(parent)
 	trainLineIndex = 0;
 	trainLineILength = 0;
 	t_time = 0;
+	initSplineMatrix();
 }  
 TrainView::~TrainView()  
 {}  
@@ -33,6 +34,49 @@ void TrainView::initializeTexture()
 	//Load and create a texture for square;'stexture
 	QOpenGLTexture* texture = new QOpenGLTexture(QImage("./Textures/Tupi.bmp"));
 	Textures.push_back(texture);
+}
+void TrainView::initSplineMatrix()
+{
+	float BSplineScale = 1.0 / 6.0;
+	float tempBSplineMatrix[][4] =
+	{
+		{-1,3,-3,1},
+		{3,-6,0,4},
+		{-3,3,3,1},
+		{1,0,0,0}
+	};
+	float CardinalScale = 0.5;
+	float tempCardinalMatrix[][4]=
+	{
+		{-1,2,-1,0},
+		{-1,1,0,0},
+		{1,-2,1,0},
+		{1,-1,0,0}
+	};
+	for (size_t i = 0; i < 4; i++)
+	{
+		for (size_t j = 0; j < 4; j++)
+		{
+			CardinalMatrix[i][j] = tempCardinalMatrix[i][j];
+			BSplineMatrix[i][j] = tempBSplineMatrix[i][j];
+		}
+	}
+	float CardinalMatrix2[][4] =
+	{
+		{0,0,0,0},
+		{2,-3,0,1},
+		{-2,3,0,0},
+		{0,0,0,0}
+	};
+	for (size_t i = 0; i < 4; i++)
+	{
+		for (size_t j = 0; j < 4; j++)
+		{
+			BSplineMatrix[i][j] *= BSplineScale;
+			CardinalMatrix[i][j] *= CardinalScale;
+			CardinalMatrix[i][j] += CardinalMatrix2[i][j];
+		}
+	}
 }
 void TrainView:: resetArcball()
 	//========================================================================
@@ -267,38 +311,7 @@ void TrainView::drawStuff(bool doingShadows)
 
 void TrainView::drawTrack(bool doingShadows)
 {
-	float BSplineScale = 1.0 / 6.0;
-	float BSplineMatrix[][4] =
-	{
-		{-1,3,-3,1},
-		{3,-6,0,4},
-		{-3,3,3,1},
-		{1,0,0,0}
-	};
-	float CardinalScale = 0.5;
-	float CardinalMatrix[][4] =
-	{
-		{-1,2,-1,0},
-		{-1,1,0,0},
-		{1,-2,1,0},
-		{1,-1,0,0}
-	};
-	float CardinalMatrix2[][4] =
-	{
-		{0,0,0,0},
-		{2,-3,0,1},
-		{-2,3,0,0},
-		{0,0,0,0}
-	};
-	for (size_t i = 0; i < 4; i++)
-	{
-		for (size_t j = 0; j < 4; j++)
-		{
-			BSplineMatrix[i][j]  *= BSplineScale;
-			CardinalMatrix[i][j] *= CardinalScale;
-			CardinalMatrix[i][j] += CardinalMatrix2[i][j];
-		}
-	}
+
 
 	type_spline = (spline_t)curve;
 	Pnt3f qt0, qt00, qt01, board0, board1;
@@ -468,29 +481,49 @@ void TrainView::drawTrainObj(float t)
 	t *= m_pTrack->points.size();
 	size_t i = t;
 	t -= i;
-	// for (i = 0; t > 1; t -= 1, i++) i++;
+	Pnt3f cp_pos_p0 = m_pTrack->points[(i - 1 + m_pTrack->points.size()) % m_pTrack->points.size()].pos;
 	Pnt3f cp_pos_p1 = m_pTrack->points[i].pos;
 	Pnt3f cp_pos_p2 = m_pTrack->points[(i + 1) % m_pTrack->points.size()].pos;
-
-	// orient
-	Pnt3f cp_orient_p1 = m_pTrack->points[i].orient;
-	Pnt3f cp_orient_p2 = m_pTrack->points[(i + 1) % m_pTrack->points.size()].orient;
+	Pnt3f cp_pos_p3 = m_pTrack->points[(i + 2) % m_pTrack->points.size()].pos;
 	Pnt3f qt, orient_t;
+
+	float tMatrix[][1] =
+	{
+		{t * t * t},
+		{t * t},
+		{t},
+		{1}
+	};
+	float MTMatrix[4][1] = { {0},{0},{0},{0} };
+	for (size_t i = 0; i < 4; i++)
+	{
+		for (size_t j = 0; j < 4; j++)
+		{
+				if(type_spline==spline_CardinalCubic)
+				MTMatrix[i][0] += CardinalMatrix[i][j] * tMatrix[j][0];
+				else if (type_spline == spline_CubicB_Spline)
+				MTMatrix[i][0] += BSplineMatrix[i][j] * tMatrix[j][0];
+		}
+	}
+		
+
 	switch (type_spline) {
 	case spline_Linear:
 		// Linear
 		qt = (1 - t) * cp_pos_p1 + t * cp_pos_p2;
-		//orient_t = (1 - t) * cp_orient_p1 + t * cp_orient_p2;
-		//orient_t = (1 - t) * cp_orient_p1 + t * cp_orient_p2;
+		break;
+	case spline_CardinalCubic:
+	case spline_CubicB_Spline:
+		qt = MTMatrix[0][0] * cp_pos_p0 +
+			 MTMatrix[1][0] * cp_pos_p1 +
+			 MTMatrix[2][0] * cp_pos_p2 +
+			 MTMatrix[3][0] * cp_pos_p3;
 		break;
 	}
+	
 	orient_t = train->getPosition().getOrient(qt);
 	train->rotateTo(orient_t);
 	train->moveTo(qt);
-	if ((int)(t * 100) % 10 == 0)
-	{
-		qt += qt;
-	}
 	glColor3ub(255, 255, 255);
 	train->render(false, false);
 
