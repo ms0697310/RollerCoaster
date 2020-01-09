@@ -92,6 +92,12 @@
     <ClCompile Include="Include\LoadObj\Model.cpp">
       <Filter>LoadObj</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Wave.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="AppMain.ui">
@@ -134,6 +140,12 @@
     </ClInclude>
     <ClInclude Include="Include\LoadObj\Model.h">
       <Filter>LoadObj</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Wave.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Shader.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
