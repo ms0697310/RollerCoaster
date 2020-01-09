@@ -11,6 +11,7 @@
 #include "Track.H"
 #include "Triangle.h"
 #include "Square.h"
+#include "Wave.h"
 #include "LoadObj/Model.h"
 #include <iostream>
 class AppMain;
@@ -80,6 +81,7 @@ public:
 	bool isrun;
 	Triangle* triangle;
 	Square* square;
+	Wave* wave;
 	GLfloat ProjectionMatrex[16];
 	GLfloat ModelViewMatrex[16];
 	QVector<QOpenGLTexture*> Textures;

@@ -28,6 +28,8 @@ void TrainView::initializeGL()
 	//Initialize texture 
 	initializeTexture();
 	train = new Model("./Models/arrow.obj", 100, Pnt3f(0, 0, 0));
+	wave = new Wave();
+	wave->Init();
 }
 void TrainView::initializeTexture()
 {
@@ -202,6 +204,9 @@ void TrainView::paintGL()
 		//Call square's render function, pass ModelViewMatrex and ProjectionMatrex
 		square->Paint(ProjectionMatrex,ModelViewMatrex);
 	square->End();
+
+	wave->updateTime(t_time);
+	wave->Paint(ProjectionMatrex, ModelViewMatrex);
 }
 
 //************************************************************************
