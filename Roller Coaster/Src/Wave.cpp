@@ -12,16 +12,27 @@ void Wave::PaintObject()
 {
 	vertices.clear();
 	normal.clear();
-	GLfloat A = 1, D0 = 1, D1 = 1, L = 1, S = 1;
-	GLfloat w = 2 * 3.14 / L, p = S * w;
-	for (GLfloat x = -10.0f; x < 10.0f; x++) {
-		for (GLfloat z = -10.0f; z < 10.0f; z++) {
-			for (int move = 0; move < 4; move++) {
-				GLfloat xx = x + (move == 1 || move == 2 ? 0.5 : -0.5);
-				GLfloat zz = z + (move == 0 || move == 1 ? -0.5 : 0.5);
-				GLfloat y = A * sin(D0 * xx + D1 * zz + time * p) + 5.0f;
-				vertices << QVector4D(xx, y, zz, 1);
-				normal << QVector3D(cos(xx), -1, zz);
+	GLfloat A[] = { 0.5, 0.1 };
+	GLfloat D[][2] = { {1, 1}, {1, 1} };
+	GLfloat L[] = { 1, 4 };
+	GLfloat S[] = {1.5, 1};
+	for (GLfloat xx = -10.0f; xx < 10.0f; xx++) {
+		for (GLfloat zz = -10.0f; zz < 10.0f; zz++) {
+			for (int mode = 0; mode < 4; mode++) {
+				GLfloat x = xx + (mode == 0 || mode == 1 ? 0 : 1);
+				GLfloat z = zz + (mode == 0 || mode == 3 ? 0 : 1);
+				QVector3D normal_point, point[4];
+				GLfloat point_move[][2] = { {0, 0}, {0, -0.5}, {-0.5, 0} };
+				for (int move = 0; move < 3; move++) {
+					point[move].setX(x + point_move[move][0]), point[move].setZ(z + point_move[move][1]), point[move].setY(5);
+					for (int i = 0; i < 2; i++)  point[move].setY(point[move].y() + A[i] * sin(D[i][0] * point[move].x() + D[i][1] * point[move].z() + time * S[i] * (2 * 3.14 / L[i])));
+				}
+				QVector3D V1 = point[1] - point[0], V2 = point[2] - point[0];
+				normal_point.setX(V1.y() * V2.z() - V1.z() * V2.y());
+				normal_point.setY(V1.z() * V2.x() - V1.x() * V2.z());
+				normal_point.setZ(V1.x() * V2.y() - V1.y() * V2.x());
+				vertices << QVector4D(point[0].x(), point[0].y(), point[0].z(), 1);
+				normal << normal_point;
 			}
 		}
 	}
