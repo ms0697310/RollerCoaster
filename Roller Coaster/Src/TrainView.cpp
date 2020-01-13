@@ -206,7 +206,10 @@ void TrainView::paintGL()
 	square->End();
 
 	wave->updateTime(t_time);
-	wave->Paint(ProjectionMatrex, ModelViewMatrex);
+	wave->Begin(ProjectionMatrex, ModelViewMatrex);
+		glActiveTexture(GL_TEXTURE0);
+		wave->PaintObject();
+	wave->End();
 }
 
 //************************************************************************

@@ -1,7 +1,8 @@
 #ifndef TRAINVIEW_H  
-#define TRAINVIEW_H  
+#define TRAINVIEW_H
+
 #include <QGLWidget> 
-#include <QtGui>  
+#include <QtGui>
 #include <QtOpenGL>  
 #include <GL/GLU.h>
 #pragma comment(lib,"opengl32.lib")
@@ -14,6 +15,7 @@
 #include "Wave.h"
 #include "LoadObj/Model.h"
 #include <iostream>
+
 class AppMain;
 class CTrack;
 

@@ -1,15 +1,60 @@
 #include "Wave.h"
 
+#if !defined(STB_IMAGE_IMPLEMENTATION) && !defined(STBI_ONLY_JPEG) 
+#define STB_IMAGE_IMPLEMENTATION
+#define STBI_ONLY_JPEG
+#include "stb_image.h"
+#endif
+
 Wave::Wave()
 	: Shader("./Shader/Wave.vs", "./Shader/Wave.fs", 2), time(0)
 {
+	faces.push_back("./Textures/right.jpg");
+	faces.push_back("./Textures/left.jpg");
+	faces.push_back("./Textures/top.jpg");
+	faces.push_back("./Textures/bottom.jpg");
+	faces.push_back("./Textures/back.jpg");
+	faces.push_back("./Textures/front.jpg");
+	waterCubeID = loadCubemap();
 }
 void Wave::updateTime(GLfloat t_time)
 {
 	time = t_time;
 }
+
+GLuint Wave::loadCubemap()
+{
+	GLuint textureID;
+	glGenTextures(1, &textureID);
+	
+	int width, height, nrChannels;
+	unsigned char* image;
+	
+	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+	for (GLuint i = 0; i < faces.size(); i++)
+	{
+		image = stbi_load(faces[i], &width, &height, &nrChannels, 0);
+		glTexImage2D(
+			GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,
+			GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image
+		);
+	}
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+
+	return textureID;
+}
+
 void Wave::PaintObject()
 {
+	glBindTexture(GL_TEXTURE_CUBE_MAP, waterCubeID);
+	shaderProgram->setUniformValue("WaterCube", 0);
+
+// 計算Wave的點的位置與法向量
 	vertices.clear();
 	normal.clear();
 	GLfloat A[] = { 0.5, 0.1 };
@@ -37,6 +82,7 @@ void Wave::PaintObject()
 		}
 	}
 
+// 將值傳給GPU
 	vertex_vbo.create();
 	vertex_vbo.bind();
 	vertex_vbo.setUsagePattern(QOpenGLBuffer::StaticDraw);
