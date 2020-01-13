@@ -10,7 +10,7 @@ public:
 	Train(const QString& filePath, int s, Pnt3f p);
 
 	//waypoints per frame
-	float MAX_TRAIN_SPEED =5;
+	float MAX_TRAIN_SPEED =1;
 	float trainSpeed;
 
 	vector<Pnt3f> waypoints;

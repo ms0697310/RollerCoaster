@@ -15,7 +15,7 @@ QGLWidget(parent)
 	type_interpolation = ArcLength;
 	initSplineMatrix();
 	frameCount = 0;
-	train = new Train("./Models/arrow.obj", 100, Pnt3f(0, 0, 0));
+	train = new Train("./Models/train.obj", 20, Pnt3f(0, 0, 0));
 }  
 TrainView::~TrainView()  
 {}  
@@ -557,8 +557,14 @@ void TrainView::drawTrainObj2(float t)
 	if (train->waypoints.size() == 0)return;
 	int index = t * train->waypoints.size();
 	Pnt3f qt = train->waypoints[index];
-	//Pnt3f orient_t = train->wayorients[index];
-	Pnt3f orient_t = train->getPosition().getOrient(train->waypoints[(index+1)% train->waypoints.size()]);
+	qt.y += 4;
+	Pnt3f o = train->wayorients[index];
+	Pnt3f orient_t = train->waypoints[index].getOrient(train->waypoints[(index+1)% train->waypoints.size()]);
+
+	orient_t.normalize();
+	//orient_t = -orient_t;
+	//orient_t.x = direction.x;
+	//orient_t.z = direction.z;
 	train->rotateTo(orient_t);
 	train->moveTo(qt);
 	glColor3ub(255, 255, 255);
