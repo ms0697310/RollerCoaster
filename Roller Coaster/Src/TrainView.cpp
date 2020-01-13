@@ -1,5 +1,6 @@
 #include "TrainView.h"  
 #include "AppMain.h"
+#include <QtMultimedia/QMediaPlaylist>
 #include "Particle.h"
 #include<QDebug>
 #include<string>
@@ -16,9 +17,9 @@ QGLWidget(parent)
 	type_interpolation = ArcLength;
 	initSplineMatrix();
 	frameCount = 0;
-	train = new Train("./Models/train.obj", 20, Pnt3f(0, 0, 0));
 	carNum = 3;
 	humanNum = 1;
+	train = new Train("./Models/train.obj", 20, Pnt3f(0, 0, 0));
 	sampleCar = Model("./Models/opencar.obj", 20, Pnt3f(0, 0, 0));
 	sampleHuman = Model("./Models/human.obj", 5, Pnt3f(0, 0, 0));
 	for (size_t i = 0; i < carNum; i++)
@@ -29,6 +30,10 @@ QGLWidget(parent)
 			humans.push_back(new Model(sampleHuman));
 		}
 	}
+	
+
+
+
 }  
 TrainView::~TrainView()  
 {}  
@@ -50,6 +55,15 @@ void TrainView::initializeGL()
 	hill = new Hill();
 	hill->Init();
 	frameTime.start();
+	QMediaPlaylist* playlist = new QMediaPlaylist();
+	playlist->addMedia(QUrl("./Music/bgm.mp3"));
+	playlist->setPlaybackMode(QMediaPlaylist::Loop);
+
+	player = new QMediaPlayer;
+	//player->setMedia(QUrl(QUrl::fromLocalFile("./Music/bgm.mp3")));
+	player->setPlaylist(playlist);
+	player->setVolume(50);
+	player->play();
 }
 void TrainView::initializeTexture()
 {
@@ -653,6 +667,8 @@ void TrainView::interpolation()
 }
 void TrainView::insertCar()
 {
+	player->play();
+
 	carNum++;
 	cars.push_back(new Model(sampleCar));
 	humans.push_back(new Model(sampleHuman));

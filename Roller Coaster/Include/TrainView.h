@@ -5,6 +5,7 @@
 #include <QtGui>
 #include <QtOpenGL>  
 #include <GL/GLU.h>
+#include <QtMultimedia/QMediaPlayer>
 #pragma comment(lib,"opengl32.lib")
 #pragma comment(lib,"glu32.lib") 
 #include "Utilities/ArcBallCam.H"
@@ -95,6 +96,7 @@ public:
 	Model sampleHuman;
 	vector<Model*> cars;
 	vector<Model*> humans;
+	QMediaPlayer* player;
 	int camera;
 	int curve;
 	int track;
