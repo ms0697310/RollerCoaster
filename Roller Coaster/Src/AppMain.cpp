@@ -53,6 +53,8 @@ AppMain::AppMain(QWidget *parent)
 	connect( ui.rcpxsub		,SIGNAL(clicked()),this,SLOT(RotateControlPointSubX())				);
 	connect( ui.rcpzadd		,SIGNAL(clicked()),this,SLOT(RotateControlPointAddZ())					);
 	connect( ui.rcpzsub		,SIGNAL(clicked()),this,SLOT(RotateControlPointSubZ())				);
+	connect( ui.car_add, SIGNAL(clicked()), this, SLOT(AddCar()));
+	connect( ui.car_sub, SIGNAL(clicked()), this, SLOT(SubCar()));
 }
 
 AppMain::~AppMain()
@@ -397,6 +399,16 @@ void AppMain::RotateControlPointSubZ()
 {
 	rollz(-1);
 	this->trainview->interpolation();
+}
+
+void AppMain::AddCar()
+{
+	trainview->insertCar();
+}
+
+void AppMain::SubCar()
+{
+	trainview->deleteCar();
 }
 
 void AppMain::ChangeCamToWorld()

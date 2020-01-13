@@ -66,6 +66,9 @@ public:
     QGroupBox *groupBox_2;
     QPushButton *rcpzadd;
     QPushButton *rcpzsub;
+    QGroupBox *groupCar;
+    QPushButton *car_add;
+    QPushButton *car_sub;
     QSpacerItem *horizontalSpacer_2;
     QHBoxLayout *horizontalLayout_2;
     QSpacerItem *horizontalSpacer_4;
@@ -84,7 +87,7 @@ public:
     {
         if (AppMainClass->objectName().isEmpty())
             AppMainClass->setObjectName(QString::fromUtf8("AppMainClass"));
-        AppMainClass->resize(1028, 769);
+        AppMainClass->resize(1158, 769);
         QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -512,6 +515,49 @@ public:
 
         horizontalLayout->addWidget(groupBox_2);
 
+        groupCar = new QGroupBox(centralWidget);
+        groupCar->setObjectName(QString::fromUtf8("groupCar"));
+        groupCar->setMinimumSize(QSize(120, 150));
+        groupCar->setMaximumSize(QSize(200, 150));
+        groupCar->setFont(font1);
+        groupCar->setStyleSheet(QString::fromUtf8("background-color: rgb(249, 249, 249);\n"
+"border-radius: 5px;"));
+        groupCar->setAlignment(Qt::AlignCenter);
+        car_add = new QPushButton(groupCar);
+        car_add->setObjectName(QString::fromUtf8("car_add"));
+        car_add->setGeometry(QRect(10, 40, 100, 44));
+        sizePolicy2.setHeightForWidth(car_add->sizePolicy().hasHeightForWidth());
+        car_add->setSizePolicy(sizePolicy2);
+        car_add->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"	background-color: rgb(80, 80, 80);\n"
+"	color: rgb(240, 240, 240);\n"
+"    border-radius: 10px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"	background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 rgba(172, 172, 172, 255), stop:1 rgba(0, 0, 0, 203));\n"
+"     padding-top: 10px;\n"
+"     padding-left: 5px;\n"
+"}"));
+        car_add->setIcon(icon3);
+        car_sub = new QPushButton(groupCar);
+        car_sub->setObjectName(QString::fromUtf8("car_sub"));
+        car_sub->setGeometry(QRect(10, 90, 100, 44));
+        car_sub->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"	background-color: rgb(80, 80, 80);\n"
+"	color: rgb(240, 240, 240);\n"
+"    border-radius: 10px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"	background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 rgba(172, 172, 172, 255), stop:1 rgba(0, 0, 0, 203));\n"
+"     padding-top: 10px;\n"
+"     padding-left: 5px;\n"
+"}"));
+        car_sub->setIcon(icon4);
+
+        horizontalLayout->addWidget(groupCar);
+
         horizontalSpacer_2 = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         horizontalLayout->addItem(horizontalSpacer_2);
@@ -555,7 +601,7 @@ public:
         AppMainClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(AppMainClass);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1028, 21));
+        menuBar->setGeometry(QRect(0, 0, 1158, 25));
         menuFile = new QMenu(menuBar);
         menuFile->setObjectName(QString::fromUtf8("menuFile"));
         menuCamera = new QMenu(menuBar);
@@ -641,6 +687,9 @@ public:
         groupBox_2->setTitle(QCoreApplication::translate("AppMainClass", "Rotate CP Z", nullptr));
         rcpzadd->setText(QString());
         rcpzsub->setText(QString());
+        groupCar->setTitle(QCoreApplication::translate("AppMainClass", "Car", nullptr));
+        car_add->setText(QString());
+        car_sub->setText(QString());
         menuFile->setTitle(QCoreApplication::translate("AppMainClass", "File", nullptr));
         menuCamera->setTitle(QCoreApplication::translate("AppMainClass", "Camera", nullptr));
         menuCurve->setTitle(QCoreApplication::translate("AppMainClass", "Curve", nullptr));
