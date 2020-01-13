@@ -45,8 +45,10 @@ public:
 	void drawTrack(bool doingShadows);
 	void drawTrain(float);
 	void drawTrainObj(float);
-	void drawTrainObj2(float);
+	void drawTrainObj2(float, bool doingShadows);
 	void interpolation();
+	void insertCar();
+	void deleteCar();
 	//void drawTrain();
 	// setup the projection - assuming that the projection stack has been
 	// cleared for you
@@ -86,6 +88,8 @@ public:
 
 	vector<Pnt3f>waypoints;
 	Train* train;
+	int carNum;
+	vector<Model*> cars;
 	int camera;
 	int curve;
 	int track;

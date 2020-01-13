@@ -16,6 +16,12 @@ QGLWidget(parent)
 	initSplineMatrix();
 	frameCount = 0;
 	train = new Train("./Models/train.obj", 20, Pnt3f(0, 0, 0));
+	carNum = 3;
+
+	for (size_t i = 0; i < carNum; i++)
+	{
+		cars.push_back(new Model("./Models/opencar.obj", 20, Pnt3f(0, 0, 0)));
+	}
 }  
 TrainView::~TrainView()  
 {}  
@@ -325,7 +331,7 @@ void TrainView::drawStuff(bool doingShadows)
 	//####################################################################
 	if (isrun) AppMain::getInstance()->advanceTrain();
 	//drawTrain(t_time);
-	drawTrainObj2(t_time);
+	drawTrainObj2(t_time, doingShadows);
 #ifdef EXAMPLE_SOLUTION
 	// don't draw the train if you're looking out the front window
 	if (!tw->trainCam->value())
@@ -552,33 +558,34 @@ void TrainView::drawTrainObj(float t)
 	train->render(false, false);
 
 }
-void TrainView::drawTrainObj2(float t)
+void TrainView::drawTrainObj2(float t, bool doingShadows)
 {
 	if (train->waypoints.size() == 0)return;
 	int index = t * train->waypoints.size();
 	Pnt3f qt = train->waypoints[index];
 	qt.y += 4;
-	Pnt3f o = train->wayorients[index];
 	Pnt3f orient_t = train->waypoints[index].getOrient(train->waypoints[(index+1)% train->waypoints.size()]);
-
 	orient_t.normalize();
-	//orient_t = -orient_t;
-	//orient_t.x = direction.x;
-	//orient_t.z = direction.z;
 	train->rotateTo(orient_t);
 	train->moveTo(qt);
-	glColor3ub(255, 255, 255);
+	if(!doingShadows)
+	glColor3ub(50, 50, 50);
 	train->render(false, false);
 
-	/*
-	if (waypoints.size() == 0)return;
-	int index = t * waypoints.size();
-	Pnt3f qt =waypoints[index];
-	Pnt3f orient_t = train->getPosition().getOrient(waypoints[(index + 1) % waypoints.size()]);
-	train->rotateTo(orient_t);
-	train->moveTo(qt);
-	glColor3ub(255, 255, 255);
-	train->render(false, false);*/
+	int distance = 10;
+	for (size_t i = 0; i < carNum; i++)
+	{
+		int tempIndex = (index - (i+1) * distance + train->waypoints.size()) % train->waypoints.size();
+		Pnt3f qt = train->waypoints[tempIndex];
+		qt.y += 2;
+		Pnt3f orient_t = train->waypoints[tempIndex].getOrient(train->waypoints[(tempIndex + 1) % train->waypoints.size()]);
+		orient_t.normalize();
+		cars[i]->rotateTo(orient_t);
+		cars[i]->moveTo(qt);
+		if (!doingShadows)
+		glColor3ub(50, 50, 50);
+		cars[i]->render(false, false);
+	}
 
 }
 void TrainView::interpolation()
@@ -600,6 +607,17 @@ void TrainView::interpolation()
 		train->interpolationLinear((Train::interpolation_t)type_interpolation, m_pTrack->points, stepArcLength, 500);
 		break;
 	}
+}
+void TrainView::insertCar()
+{
+	carNum++;
+	cars.push_back(new Model("./Models/opencar.obj", 20, Pnt3f(0, 0, 0)));
+}
+void TrainView::deleteCar()
+{
+	if (carNum == 0)return;
+	carNum--;
+	cars.erase(cars.begin()+cars.size()-1);
 }
 void TrainView::drawTrain(float t)
 {
