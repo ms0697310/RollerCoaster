@@ -55,6 +55,8 @@ AppMain::AppMain(QWidget *parent)
 	connect( ui.rcpzsub		,SIGNAL(clicked()),this,SLOT(RotateControlPointSubZ())				);
 	connect( ui.car_add, SIGNAL(clicked()), this, SLOT(AddCar()));
 	connect( ui.car_sub, SIGNAL(clicked()), this, SLOT(SubCar()));
+	connect(ui.mcpyadd, SIGNAL(clicked()), this, SLOT(MoveControlPointAddY()));
+	connect(ui.mcpysub, SIGNAL(clicked()), this, SLOT(MoveControlPointSubY()));
 
 	initPath();
 }
@@ -361,7 +363,16 @@ void AppMain::rollx(float dir)
 		this->m_Track.points[s].orient.z = si * old.y + co * old.z;
 	}
 	this->damageMe();
-} 
+}
+void AppMain::movey(float height)
+{
+	int s = this->trainview->selectedCube;
+	if (s >= 0) {
+		this->m_Track.points[s].pos.y += height;
+	}
+	this->damageMe();
+}
+
 
 void AppMain::RotateControlPointAddX()
 {
@@ -400,6 +411,18 @@ void AppMain::RotateControlPointAddZ()
 void AppMain::RotateControlPointSubZ()
 {
 	rollz(-1);
+	this->trainview->interpolation();
+}
+
+void AppMain::MoveControlPointAddY()
+{
+	movey(1);
+	this->trainview->interpolation();
+}
+
+void AppMain::MoveControlPointSubY()
+{
+	movey(-1);
 	this->trainview->interpolation();
 }
 
