@@ -168,5 +168,8 @@
     <ClInclude Include="Include\Hill.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Particle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
