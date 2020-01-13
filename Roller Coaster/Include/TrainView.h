@@ -91,6 +91,8 @@ public:
 	Train* train;
 	int carNum;
 	int humanNum;
+	Model sampleCar;
+	Model sampleHuman;
 	vector<Model*> cars;
 	vector<Model*> humans;
 	int camera;

@@ -18,12 +18,14 @@ QGLWidget(parent)
 	train = new Train("./Models/train.obj", 20, Pnt3f(0, 0, 0));
 	carNum = 3;
 	humanNum = 1;
+	sampleCar = Model("./Models/opencar.obj", 20, Pnt3f(0, 0, 0));
+	sampleHuman = Model("./Models/human.obj", 5, Pnt3f(0, 0, 0));
 	for (size_t i = 0; i < carNum; i++)
 	{
-		cars.push_back(new Model("./Models/opencar.obj", 20, Pnt3f(0, 0, 0)));
+		cars.push_back(new Model(sampleCar));
 		for (size_t j = 0; j < humanNum; j++)
 		{
-			humans.push_back(new Model("./Models/human.obj", 5, Pnt3f(0, 0, 0)));
+			humans.push_back(new Model(sampleHuman));
 		}
 	}
 }  
@@ -283,6 +285,23 @@ setProjection()
 	// TODO: 
 	// put code for train view projection here!	
 	//####################################################################
+	else if (this->camera == 2) {
+		float wi, he;
+		if (aspect >= 1) {
+			wi = 110;
+			he = wi / aspect;
+		}
+		else {
+			he = 110;
+			wi = he * aspect;
+		}
+		glMatrixMode(GL_PROJECTION);
+		glOrtho(-wi, wi, -he, he, 200, -200);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		glRotatef(-90, 1, 0, 0);
+		update();
+	}
 	else {
 #ifdef EXAMPLE_SOLUTION
 		trainCamView(this,aspect);
@@ -630,13 +649,15 @@ void TrainView::interpolation()
 void TrainView::insertCar()
 {
 	carNum++;
-	cars.push_back(new Model("./Models/opencar.obj", 20, Pnt3f(0, 0, 0)));
+	cars.push_back(new Model(sampleCar));
+	humans.push_back(new Model(sampleHuman));
 }
 void TrainView::deleteCar()
 {
 	if (carNum == 0)return;
 	carNum--;
-	cars.erase(cars.begin()+cars.size()-1);
+	cars.erase(cars.begin() + cars.size() - 1);
+	humans.erase(humans.begin() + humans.size() - 1);
 }
 void TrainView::drawTrain(float t)
 {
