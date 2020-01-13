@@ -17,10 +17,14 @@ QGLWidget(parent)
 	frameCount = 0;
 	train = new Train("./Models/train.obj", 20, Pnt3f(0, 0, 0));
 	carNum = 3;
-
+	humanNum = 1;
 	for (size_t i = 0; i < carNum; i++)
 	{
 		cars.push_back(new Model("./Models/opencar.obj", 20, Pnt3f(0, 0, 0)));
+		for (size_t j = 0; j < humanNum; j++)
+		{
+			humans.push_back(new Model("./Models/human.obj", 5, Pnt3f(0, 0, 0)));
+		}
 	}
 }  
 TrainView::~TrainView()  
@@ -583,8 +587,21 @@ void TrainView::drawTrainObj2(float t, bool doingShadows)
 		cars[i]->rotateTo(orient_t);
 		cars[i]->moveTo(qt);
 		if (!doingShadows)
-		glColor3ub(50, 50, 50);
+			glColor3ub(50, 50, 50);
 		cars[i]->render(false, false);
+		qt.y += 3;
+		for (size_t j = 0; j < humanNum; j++)
+		{
+			humans[i * humanNum + j]->rotateTo(orient_t);
+			humans[i * humanNum + j]->moveTo(qt+ orient_t*j);
+			if (!doingShadows)
+				glColor3ub(254, 225, 185);
+			humans[i * humanNum + j]->render(false, false);
+		}
+		
+		
+		
+		
 	}
 
 }

@@ -89,7 +89,9 @@ public:
 	vector<Pnt3f>waypoints;
 	Train* train;
 	int carNum;
+	int humanNum;
 	vector<Model*> cars;
+	vector<Model*> humans;
 	int camera;
 	int curve;
 	int track;
