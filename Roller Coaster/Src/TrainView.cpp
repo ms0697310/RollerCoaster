@@ -1,6 +1,7 @@
 #include "TrainView.h"  
 #include "AppMain.h"
 #include <QtMultimedia/QMediaPlaylist>
+#include "Particle.h"
 #include<QDebug>
 #include<string>
 TrainView::TrainView(QWidget *parent) :  
@@ -238,13 +239,20 @@ void TrainView::paintGL()
 	//	square->Paint(ProjectionMatrex,ModelViewMatrex);
 	//square->End();
 
+	//水面
 	wave->updateTime(t_time);
 
 	wave->Begin(ProjectionMatrex, ModelViewMatrex);
 		glActiveTexture(GL_TEXTURE0);
 		wave->PaintObject();
 	wave->End();
-		++frameCount;
+
+	//煙火
+	ProcessParticles(t_time);
+	DrawParticles();
+
+	//fps計算
+	++frameCount;
 	if (frameTime.elapsed() >= 1000)
 	{
 
