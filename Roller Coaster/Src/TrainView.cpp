@@ -211,9 +211,12 @@ void TrainView::paintGL()
 	square->End();
 
 	wave->updateTime(t_time);
-	wave->Paint(ProjectionMatrex, ModelViewMatrex);
 
-	++frameCount;
+	wave->Begin(ProjectionMatrex, ModelViewMatrex);
+		glActiveTexture(GL_TEXTURE0);
+		wave->PaintObject();
+	wave->End();
+		++frameCount;
 	if (frameTime.elapsed() >= 1000)
 	{
 
@@ -353,15 +356,15 @@ void TrainView::drawTrack(bool doingShadows)
 		Pnt3f cp_orient_p1 = m_pTrack->points[i].orient;
 		Pnt3f cp_orient_p2 = m_pTrack->points[(i + 1) % m_pTrack->points.size()].orient;
 		Pnt3f cp_orient_p3 = m_pTrack->points[(i + 2) % m_pTrack->points.size()].orient;
-		// ·L½Õ¨¤«× ¨¾¤î180«×Â½Âà°ÝÃD
+		// ï¿½Lï¿½Õ¨ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½180ï¿½ï¿½Â½ï¿½ï¿½ï¿½ï¿½D
 		
 		cp_orient_p1.normalize();
 		cp_orient_p2.normalize();
 		if (cp_orient_p2 == -cp_orient_p1)
 		{
 			
-			//­YÂI¦ì¸m±×²v»P·L½Õªº¨¤«×¬Û¦P¡A«h®ÄªG¤£¨Î¡C
-			//¬G°µ¤F±×²v§PÂ_¥H¤Î¤£¦Pªº¨¤«×·L½Õ¡C
+			//ï¿½Yï¿½Iï¿½ï¿½mï¿½×²vï¿½Pï¿½Lï¿½Õªï¿½ï¿½ï¿½ï¿½×¬Û¦Pï¿½Aï¿½hï¿½ÄªGï¿½ï¿½ï¿½Î¡C
+			//ï¿½Gï¿½ï¿½ï¿½Fï¿½×²vï¿½Pï¿½_ï¿½Hï¿½Î¤ï¿½ï¿½Pï¿½ï¿½ï¿½ï¿½ï¿½×·Lï¿½Õ¡C
 			
 			Pnt3f temp = cp_pos_p2 - cp_pos_p1;
 			temp.normalize();
@@ -372,7 +375,7 @@ void TrainView::drawTrack(bool doingShadows)
 		}
 		cp_orient_p1.normalize();
 		cp_orient_p2.normalize();
-		// ·L½Õ¨¤«×END
+		// ï¿½Lï¿½Õ¨ï¿½ï¿½ï¿½END
 		float percent = 1.0f / DIVIDE_LINE;
 		float t = 0;
 		if (!started) qt00 = qt01 = qt;
@@ -439,7 +442,7 @@ void TrainView::drawTrack(bool doingShadows)
 				float len = sqrt((diff.x * diff.x) + (diff.y * diff.y) + (diff.z * diff.z));
 				boardLen += len;
 
-				// ­y¹D
+				// ï¿½yï¿½D
 				glLineWidth(4);
 				glBegin(GL_LINES);
 				if (!doingShadows) {
@@ -454,7 +457,7 @@ void TrainView::drawTrack(bool doingShadows)
 				
 				glEnd();
 
-				// ¤ì±ø
+				// ï¿½ï¿½ï¿½
 				Pnt3f cross_b = diff * orient_t;
 				cross_b.normalize();
 				cross_b = cross_b * 3.5f;
