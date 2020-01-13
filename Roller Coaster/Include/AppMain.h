@@ -47,6 +47,8 @@ public:
 	bool canpan;
 	bool isHover;
 
+	void initPath();
+
 private:
 	void UpdateCameraState( int index );
 	void UpdateCurveState( int index );

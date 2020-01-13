@@ -55,6 +55,8 @@ AppMain::AppMain(QWidget *parent)
 	connect( ui.rcpzsub		,SIGNAL(clicked()),this,SLOT(RotateControlPointSubZ())				);
 	connect( ui.car_add, SIGNAL(clicked()), this, SLOT(AddCar()));
 	connect( ui.car_sub, SIGNAL(clicked()), this, SLOT(SubCar()));
+
+	initPath();
 }
 
 AppMain::~AppMain()
@@ -454,6 +456,18 @@ void AppMain::ChangeTrackToTrack()
 void AppMain::ChangeTrackToRoad()
 {
 	this->trainview->track = 2;
+}
+
+void AppMain::initPath()
+{
+	QString fileName = "./Track/init.txt";
+	QByteArray byteArray = fileName.toLocal8Bit();
+	const char* fname = byteArray.data();
+	if (!fileName.isEmpty())
+	{
+		this->m_Track.readPoints(fname);
+	}
+	this->trainview->interpolation();
 }
 
 void AppMain::UpdateCameraState( int index )
