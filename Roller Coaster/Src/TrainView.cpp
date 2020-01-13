@@ -234,8 +234,7 @@ void TrainView::paintGL()
 	wave->End();
 
 	//煙火
-
-	ProcessParticles();
+	ProcessParticles(t_time);
 	DrawParticles();
 
 	//fps計算

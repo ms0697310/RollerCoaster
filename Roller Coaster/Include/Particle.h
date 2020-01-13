@@ -30,6 +30,7 @@ pParticle Particles = nullptr;
 UINT nOfFires = 0;
 
 UINT Tick1, Tick2 = GetTickCount();
+float timeLast = 0;
 float DTick;
 GLfloat grav;
 
@@ -343,10 +344,14 @@ void DrawParticles() {
 	}
 }
 
-void ProcessParticles()
+void ProcessParticles(float time)
 {
 	Tick1 = Tick2;
 	Tick2 = GetTickCount();
+
+	if (timeLast == time) return;
+	timeLast = time;
+	
 	DTick = float(Tick2 - Tick1);
 	DTick *= 0.5f;
 	Particle ep;
