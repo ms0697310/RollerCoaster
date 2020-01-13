@@ -44,6 +44,8 @@ void TrainView::initializeGL()
 	initializeTexture();
 	wave = new Wave();
 	wave->Init();
+	hill = new Hill();
+	hill->Init();
 	frameTime.start();
 }
 void TrainView::initializeTexture()
@@ -179,10 +181,10 @@ void TrainView::paintGL()
 	//*********************************************************************
 	// now draw the ground plane
 	//*********************************************************************
-	setupFloor();
-	glDisable(GL_LIGHTING);
-	drawFloor(200,10);
-
+	// setupFloor();
+	// glDisable(GL_LIGHTING);
+	// drawFloor(200,10);
+	hill->Paint(ProjectionMatrex, ModelViewMatrex);
 
 	//*********************************************************************
 	// now draw the object and we need to do it twice
@@ -206,19 +208,19 @@ void TrainView::paintGL()
  	glGetFloatv(GL_PROJECTION_MATRIX,ProjectionMatrex);
 
 	//Call triangle's render function, pass ModelViewMatrex and ProjectionMatrex
- 	triangle->Paint(ProjectionMatrex,ModelViewMatrex);
+ 	//triangle->Paint(ProjectionMatrex,ModelViewMatrex);
     
 	//we manage textures by Trainview class, so we modify square's render function
-	square->Begin();
-		//Active Texture
-		glActiveTexture(GL_TEXTURE0);
-		//Bind square's texture
-		Textures[0]->bind();
-		//pass texture to shader
-		square->shaderProgram->setUniformValue("Texture",0);
-		//Call square's render function, pass ModelViewMatrex and ProjectionMatrex
-		square->Paint(ProjectionMatrex,ModelViewMatrex);
-	square->End();
+	//square->Begin();
+	//	//Active Texture
+	//	glActiveTexture(GL_TEXTURE0);
+	//	//Bind square's texture
+	//	Textures[0]->bind();
+	//	//pass texture to shader
+	//	square->shaderProgram->setUniformValue("Texture",0);
+	//	//Call square's render function, pass ModelViewMatrex and ProjectionMatrex
+	//	square->Paint(ProjectionMatrex,ModelViewMatrex);
+	//square->End();
 
 	wave->updateTime(t_time);
 

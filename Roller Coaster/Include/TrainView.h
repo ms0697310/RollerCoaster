@@ -14,6 +14,7 @@
 #include "Square.h"
 #include "Wave.h"
 #include "Train.h"
+#include "Hill.h"
 #include <iostream>
 
 class AppMain;
@@ -99,6 +100,7 @@ public:
 	Triangle* triangle;
 	Square* square;
 	Wave* wave;
+	Hill* hill;
 	GLfloat ProjectionMatrex[16];
 	GLfloat ModelViewMatrex[16];
 	QVector<QOpenGLTexture*> Textures;
