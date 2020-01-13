@@ -86,7 +86,11 @@ normalize()
 Pnt3f Pnt3f::getOrient(const Pnt3f& p) const
 {
 	Pnt3f temp = (p - *this);
-	qSwap(temp.x, temp.z);
-	temp.z = -temp.z;
+
 	return Pnt3f(temp.normalize());
+}
+
+float Pnt3f::length() const
+{
+	return sqrt(x*x+y*y+z*z);
 }

@@ -1,5 +1,7 @@
 #include "TrainView.h"  
 #include "AppMain.h"
+#include<QDebug>
+#include<string>
 TrainView::TrainView(QWidget *parent) :  
 QGLWidget(parent)  
 {  
@@ -10,7 +12,10 @@ QGLWidget(parent)
 	trainLineIndex = 0;
 	trainLineILength = 0;
 	t_time = 0;
+	type_interpolation = ArcLength;
 	initSplineMatrix();
+	frameCount = 0;
+	train = new Train("./Models/arrow.obj", 100, Pnt3f(0, 0, 0));
 }  
 TrainView::~TrainView()  
 {}  
@@ -27,9 +32,9 @@ void TrainView::initializeGL()
 	square->Init();
 	//Initialize texture 
 	initializeTexture();
-	train = new Model("./Models/arrow.obj", 100, Pnt3f(0, 0, 0));
 	wave = new Wave();
 	wave->Init();
+	frameTime.start();
 }
 void TrainView::initializeTexture()
 {
@@ -207,6 +212,17 @@ void TrainView::paintGL()
 
 	wave->updateTime(t_time);
 	wave->Paint(ProjectionMatrex, ModelViewMatrex);
+
+	++frameCount;
+	if (frameTime.elapsed() >= 1000)
+	{
+
+		double fps = frameCount / ((double)frameTime.elapsed() / 1000.0);
+		
+		qInfo("FPS: %s",std::to_string(fps).c_str());
+		frameTime.restart();
+		frameCount = 0;
+	}
 }
 
 //************************************************************************
@@ -306,7 +322,7 @@ void TrainView::drawStuff(bool doingShadows)
 	//####################################################################
 	if (isrun) AppMain::getInstance()->advanceTrain();
 	//drawTrain(t_time);
-	drawTrainObj(t_time);
+	drawTrainObj2(t_time);
 #ifdef EXAMPLE_SOLUTION
 	// don't draw the train if you're looking out the front window
 	if (!tw->trainCam->value())
@@ -504,13 +520,13 @@ void TrainView::drawTrainObj(float t)
 	{
 		for (size_t j = 0; j < 4; j++)
 		{
-				if(type_spline==spline_CardinalCubic)
+			if (type_spline == spline_CardinalCubic)
 				MTMatrix[i][0] += CardinalMatrix[i][j] * tMatrix[j][0];
-				else if (type_spline == spline_CubicB_Spline)
+			else if (type_spline == spline_CubicB_Spline)
 				MTMatrix[i][0] += BSplineMatrix[i][j] * tMatrix[j][0];
 		}
 	}
-		
+
 
 	switch (type_spline) {
 	case spline_Linear:
@@ -520,18 +536,61 @@ void TrainView::drawTrainObj(float t)
 	case spline_CardinalCubic:
 	case spline_CubicB_Spline:
 		qt = MTMatrix[0][0] * cp_pos_p0 +
-			 MTMatrix[1][0] * cp_pos_p1 +
-			 MTMatrix[2][0] * cp_pos_p2 +
-			 MTMatrix[3][0] * cp_pos_p3;
+			MTMatrix[1][0] * cp_pos_p1 +
+			MTMatrix[2][0] * cp_pos_p2 +
+			MTMatrix[3][0] * cp_pos_p3;
 		break;
 	}
-	
+
 	orient_t = train->getPosition().getOrient(qt);
 	train->rotateTo(orient_t);
 	train->moveTo(qt);
 	glColor3ub(255, 255, 255);
 	train->render(false, false);
 
+}
+void TrainView::drawTrainObj2(float t)
+{
+	if (train->waypoints.size() == 0)return;
+	int index = t * train->waypoints.size();
+	Pnt3f qt = train->waypoints[index];
+	//Pnt3f orient_t = train->wayorients[index];
+	Pnt3f orient_t = train->getPosition().getOrient(train->waypoints[(index+1)% train->waypoints.size()]);
+	train->rotateTo(orient_t);
+	train->moveTo(qt);
+	glColor3ub(255, 255, 255);
+	train->render(false, false);
+
+	/*
+	if (waypoints.size() == 0)return;
+	int index = t * waypoints.size();
+	Pnt3f qt =waypoints[index];
+	Pnt3f orient_t = train->getPosition().getOrient(waypoints[(index + 1) % waypoints.size()]);
+	train->rotateTo(orient_t);
+	train->moveTo(qt);
+	glColor3ub(255, 255, 255);
+	train->render(false, false);*/
+
+}
+void TrainView::interpolation()
+{
+	if (m_pTrack->points.size() == 0)return;
+	type_spline = (spline_t)curve;
+	float stepArcLength = 2;
+	switch (type_spline) {
+	case spline_Linear:
+		train->interpolationLinear((Train::interpolation_t)type_interpolation, m_pTrack->points, stepArcLength, 500);
+		break;
+	case spline_CardinalCubic:
+		train->interpolationCardinalCubic((Train::interpolation_t)type_interpolation, m_pTrack->points,CardinalMatrix, stepArcLength, 500);
+		break;
+	case spline_CubicB_Spline:
+		train->interpolationCubicB_Spline((Train::interpolation_t)type_interpolation, m_pTrack->points, BSplineMatrix, stepArcLength,5000);
+		break;
+	default:
+		train->interpolationLinear((Train::interpolation_t)type_interpolation, m_pTrack->points, stepArcLength, 500);
+		break;
+	}
 }
 void TrainView::drawTrain(float t)
 {

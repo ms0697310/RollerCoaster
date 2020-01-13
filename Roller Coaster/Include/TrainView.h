@@ -12,7 +12,7 @@
 #include "Triangle.h"
 #include "Square.h"
 #include "Wave.h"
-#include "LoadObj/Model.h"
+#include "Train.h"
 #include <iostream>
 class AppMain;
 class CTrack;
@@ -43,6 +43,8 @@ public:
 	void drawTrack(bool doingShadows);
 	void drawTrain(float);
 	void drawTrainObj(float);
+	void drawTrainObj2(float);
+	void interpolation();
 	//void drawTrain();
 	// setup the projection - assuming that the projection stack has been
 	// cleared for you
@@ -64,6 +66,8 @@ public:
 
 	CTrack*			m_pTrack;		// The track of the entire scene
 
+	QTime frameTime;
+	int frameCount;
 	float t_time;
 	unsigned int DIVIDE_LINE;
 	unsigned int BOARD_DISTANCE_LENGTH;
@@ -73,8 +77,13 @@ public:
 		spline_CardinalCubic = 1,
 		spline_CubicB_Spline = 2
 	} spline_t;
+	typedef enum {
+		DivideLine,
+		ArcLength
+	} interpolation_t;
 
-	Model* train;
+	vector<Pnt3f>waypoints;
+	Train* train;
 	int camera;
 	int curve;
 	int track;
@@ -87,6 +96,7 @@ public:
 	QVector<QOpenGLTexture*> Textures;
 
 	spline_t type_spline;
+	interpolation_t type_interpolation;
 
 	int trainLineIndex;
 	unsigned int trainLineILength;

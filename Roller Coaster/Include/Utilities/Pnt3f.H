@@ -65,6 +65,8 @@ class Pnt3f {
 
 		Pnt3f getOrient(const Pnt3f&) const;
 
+		float length() const;
+
 		// note - the operators above are for Pnt3f*scalar, here we have scalar*Pnt3f
 		friend Pnt3f operator * (const float s, const Pnt3f& p );
 		float& operator[](unsigned int index) {
@@ -175,8 +177,8 @@ inline bool Pnt3f::
 operator == (const Pnt3f& p) const
 //=============================================================================
 {
-	float buffer = 0.0001;
-	return std::abs(x - p.x) <buffer && std::abs(y - p.y) < buffer && std::abs(z - p.z) < buffer;
+	float buffer = 0.01;
+	return std::pow(x - p.x,2) <buffer && std::pow(y - p.y,2) < buffer && std::pow(z - p.z,2) < buffer;
 };
 
 //*****************************************************************************

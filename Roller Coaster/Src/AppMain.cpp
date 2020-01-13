@@ -21,6 +21,7 @@ AppMain::AppMain(QWidget *parent)
 	this->trainview->track = 0;
 	this->trainview->curve = 0;
 	this->trainview->isrun = false;
+	this->trainview->interpolation();
 
 	setWindowTitle( "Roller Coaster" );
 
@@ -122,6 +123,7 @@ bool AppMain::eventFilter(QObject *watched, QEvent *e) {
 			cp->pos.x = (float) rx;
 			cp->pos.y = (float) ry;
 			cp->pos.z = (float) rz;
+			trainview->interpolation();
 		}
 		if(trainview->arcball.mode != trainview->arcball.None) { // we're taking the drags
 			float x,y;
@@ -185,6 +187,7 @@ void AppMain::LoadTrackPath()
 	{
 		this->m_Track.readPoints(fname);
 	}
+	this->trainview->interpolation();
 }
 
 void AppMain::SaveTrackPath()
@@ -257,8 +260,7 @@ void AppMain::ChangeCurveType( QString type )
 	{
 		this->trainview->curve = 2;
 	}
-
-
+	this->trainview->interpolation();
 }
 
 void AppMain::ChangeTrackType( QString type )
@@ -280,7 +282,7 @@ void AppMain::ChangeTrackType( QString type )
 static unsigned long lastRedraw = 0;
 void AppMain::SwitchPlayAndPause()
 {
-	if( !this->trainview->isrun )
+	if( this->trainview->isrun )
 	{
 		ui.bPlay->setIcon(QIcon(":/AppMain/Resources/Icons/play.ico"));
 		this->trainview->isrun = !this->trainview->isrun;
@@ -301,7 +303,7 @@ void AppMain::SwitchPlayAndPause()
 
 void AppMain::ChangeSpeedOfTrain( int val )
 {
-	//m_rollerCoaster->trainSpeed = m_rollerCoaster->MAX_TRAIN_SPEED * float(val) / 100.0f;
+	trainview->train->trainSpeed = trainview->train->MAX_TRAIN_SPEED * float(val) / 100.0f;
 }
 
 void AppMain::AddControlPoint()
@@ -324,6 +326,7 @@ void AppMain::AddControlPoint()
 		if (this->m_Track.trainU >= npts) this->m_Track.trainU -= npts;
 	}
 	this->damageMe();
+	this->trainview->interpolation();
 }
 
 void AppMain::DeleteControlPoint()
@@ -335,6 +338,7 @@ void AppMain::DeleteControlPoint()
 			this->m_Track.points.pop_back();
 	}
 	this->damageMe();
+	this->trainview->interpolation();
 }
 
 
@@ -358,11 +362,13 @@ void AppMain::rollx(float dir)
 void AppMain::RotateControlPointAddX()
 {
 	rollx(1);
+	this->trainview->interpolation();
 }
 
 void AppMain::RotateControlPointSubX()
 {
 	rollx(-1);
+	this->trainview->interpolation();
 }
 
 void AppMain::rollz(float dir)
@@ -384,11 +390,13 @@ void AppMain::rollz(float dir)
 void AppMain::RotateControlPointAddZ()
 {
 	rollz(1);
+	this->trainview->interpolation();
 }
 
 void AppMain::RotateControlPointSubZ()
 {
 	rollz(-1);
+	this->trainview->interpolation();
 }
 
 void AppMain::ChangeCamToWorld()
@@ -478,7 +486,9 @@ damageMe()
 void AppMain::
 advanceTrain(float dir)
 {
-	trainview->t_time += (dir / m_Track.points.size() / (trainview->DIVIDE_LINE) );
+	//trainview->t_time += (dir / trainview->train->waypoints.size());
+	trainview->t_time += (dir / (trainview->train->waypoints.size()/trainview->train->trainSpeed));
+	//trainview->t_time += (dir / m_Track.points.size() / (trainview->DIVIDE_LINE) );
 	if (trainview->t_time > 1.0f)
 		trainview->t_time -= 1.0f;
 	if (this->trainview->isrun) {

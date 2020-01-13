@@ -184,6 +184,7 @@
     <ClCompile Include="Src\AppMain.cpp" />
     <ClCompile Include="Src\ControlPoint.cpp" />
     <ClCompile Include="Src\main.cpp" />
+    <ClCompile Include="Src\Shader.cpp" />
     <ClCompile Include="Src\Square.cpp" />
     <ClCompile Include="Src\Track.cpp" />
     <ClCompile Include="Src\TrainView.cpp" />
@@ -191,6 +192,9 @@
     <ClCompile Include="Src\Utilities\3DUtils.cpp" />
     <ClCompile Include="Src\Utilities\ArcBallCam.cpp" />
     <ClCompile Include="Src\Utilities\Pnt3f.cpp" />
+    <ClCompile Include="Src\vector.cpp" />
+    <ClCompile Include="Src\Wave.cpp" />
+    <ClCompile Include="Train.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="AppMain.ui">
@@ -218,8 +222,12 @@
     <ClInclude Include="GeneratedFiles\ui_AppMain.h" />
     <ClInclude Include="Include\ControlPoint.H" />
     <ClInclude Include="Include\LoadObj\Model.h" />
+    <ClInclude Include="Include\Shader.h" />
     <ClInclude Include="Include\Square.h" />
     <ClInclude Include="Include\Track.H" />
+    <ClInclude Include="Include\vector.h" />
+    <ClInclude Include="Include\Wave.h" />
+    <ClInclude Include="Train.h" />
     <CustomBuild Include="Include\TrainView.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>

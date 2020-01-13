@@ -343,7 +343,7 @@ public:
 "QPushButton:pressed {\n"
 "}"));
         QIcon icon2;
-        icon2.addFile(QString::fromUtf8(":/AppMain/mplay.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon2.addFile(QString::fromUtf8(":/AppMain/Resources/Icons/play.ico"), QSize(), QIcon::Normal, QIcon::Off);
         bPlay->setIcon(icon2);
         bPlay->setIconSize(QSize(40, 40));
 

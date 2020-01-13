@@ -484,7 +484,7 @@ QPushButton:pressed {
          </property>
          <property name="icon">
           <iconset resource="AppMain.qrc">
-           <normaloff>:/AppMain/mplay.png</normaloff>:/AppMain/mplay.png</iconset>
+           <normaloff>:/AppMain/Resources/Icons/play.ico</normaloff>:/AppMain/Resources/Icons/play.ico</iconset>
          </property>
          <property name="iconSize">
           <size>
