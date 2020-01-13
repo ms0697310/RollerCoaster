@@ -23,6 +23,7 @@ public:
 	void rotateTo(Pnt3f orient) { this->orient = orient; }
 	void moveTo(Pnt3f pos) { this->pos = pos; }
 	const Pnt3f getPosition() { return pos; }
+	const Pnt3f getOrient() { return orient; }
 private:
 	QString m_fileName;
 	QVector<Pnt3f> m_points;

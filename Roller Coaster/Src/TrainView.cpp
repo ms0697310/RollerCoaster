@@ -286,20 +286,17 @@ setProjection()
 	// put code for train view projection here!	
 	//####################################################################
 	else if (this->camera == 2) {
-		float wi, he;
-		if (aspect >= 1) {
-			wi = 110;
-			he = wi / aspect;
-		}
-		else {
-			he = 110;
-			wi = he * aspect;
-		}
+		//
+		Pnt3f eye = train->getPosition();
+		Pnt3f direction=train->getOrient();
 		glMatrixMode(GL_PROJECTION);
-		glOrtho(-wi, wi, -he, he, 200, -200);
+		glLoadIdentity();
+		gluPerspective(50.0, aspect, 9, 100);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		glRotatef(-90, 1, 0, 0);
+		gluLookAt(eye.x + direction.x*4, eye.y + direction.y * 4, eye.z + direction.z * 4,
+			eye.x+ direction.x * 5, eye.y+ direction.y *5, eye.z+ direction.z * 5,0, 1, 0);
+		//glLoadIdentity();
 		update();
 	}
 	else {
