@@ -207,7 +207,11 @@ void TrainView::paintGL()
 	glLightfv(GL_LIGHT2, GL_POSITION, lightPosition3);
 	glLightfv(GL_LIGHT2, GL_DIFFUSE, blueLight);
 
-
+	//draw background
+	bg->Begin(ProjectionMatrex, ModelViewMatrex);
+		glActiveTexture(GL_TEXTURE0);
+		bg->PaintObject();
+	bg->End();
 
 	//*********************************************************************
 	// now draw the ground plane

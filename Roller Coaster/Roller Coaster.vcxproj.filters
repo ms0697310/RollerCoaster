@@ -107,10 +107,13 @@
     <ClCompile Include="Src\Hill.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Human.cpp">
+    <ClCompile Include="Src\Stone.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Stone.cpp">
+    <ClCompile Include="Src\Background.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Human.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\Background.cpp">
@@ -177,10 +180,13 @@
     <ClInclude Include="Include\Particle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Human.h">
+    <ClInclude Include="Include\Stone.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Stone.h">
+    <ClInclude Include="Include\Background.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Human.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\Background.h">
