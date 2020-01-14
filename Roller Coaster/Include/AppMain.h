@@ -59,6 +59,9 @@ private:
 	void rollz( float dir );
 	Ui::AppMainClass ui;
 
+private:
+	void humanViewEnableOrDisable(bool);
+
 	private slots:
 		void LoadTrackPath();
 		void SaveTrackPath();
@@ -101,6 +104,13 @@ private:
 
 		void AddPeopleView();
 		void SubPeopleView();
+
+		void MoveHumanViewUp();
+		void MoveHumanViewDown();
+		void MoveHumanViewLeft();
+		void MoveHumanViewRight();
+		void RotateHumanViewLeft();
+		void RotateHumanViewRight();
 
 protected:
 	bool eventFilter(QObject *watched, QEvent *e); 

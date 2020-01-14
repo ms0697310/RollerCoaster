@@ -180,12 +180,16 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="Human.cpp" />
     <ClCompile Include="Include\LoadObj\Model.cpp" />
     <ClCompile Include="Src\AppMain.cpp" />
+    <ClCompile Include="Src\Background.cpp" />
     <ClCompile Include="Src\ControlPoint.cpp" />
+    <ClCompile Include="Src\Hill.cpp" />
     <ClCompile Include="Src\main.cpp" />
     <ClCompile Include="Src\Shader.cpp" />
     <ClCompile Include="Src\Square.cpp" />
+    <ClCompile Include="Src\Stone.cpp" />
     <ClCompile Include="Src\Track.cpp" />
     <ClCompile Include="Src\TrainView.cpp" />
     <ClCompile Include="Src\Triangle.cpp" />
@@ -220,10 +224,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_AppMain.h" />
+    <ClInclude Include="Human.h" />
+    <ClInclude Include="Include\Background.h" />
     <ClInclude Include="Include\ControlPoint.H" />
+    <ClInclude Include="Include\Hill.h" />
     <ClInclude Include="Include\LoadObj\Model.h" />
+    <ClInclude Include="Include\Particle.h" />
     <ClInclude Include="Include\Shader.h" />
     <ClInclude Include="Include\Square.h" />
+    <ClInclude Include="Include\Stone.h" />
     <ClInclude Include="Include\Track.H" />
     <ClInclude Include="Include\vector.h" />
     <ClInclude Include="Include\Wave.h" />
