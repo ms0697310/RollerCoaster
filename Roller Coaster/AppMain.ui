@@ -1476,6 +1476,7 @@ QPushButton:pressed {
     <addaction name="aWorld"/>
     <addaction name="aTop"/>
     <addaction name="aTrain"/>
+    <addaction name="aHuman"/>
    </widget>
    <widget class="QMenu" name="menuCurve">
     <property name="title">
@@ -1620,6 +1621,11 @@ QPushButton:pressed {
    </property>
    <property name="text">
     <string>Road</string>
+   </property>
+  </action>
+  <action name="aHuman">
+   <property name="text">
+    <string>Human</string>
    </property>
   </action>
  </widget>

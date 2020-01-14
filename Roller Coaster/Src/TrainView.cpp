@@ -332,6 +332,21 @@ setProjection()
 		glLoadIdentity();
 		gluLookAt(eye.x + direction.x*4, eye.y + direction.y * 4, eye.z + direction.z * 4,
 			eye.x+ direction.x * 5, eye.y+ direction.y *5, eye.z+ direction.z * 5, up.x, up.y, up.z);
+		update();
+	}
+	else if (this->camera == 3) {
+		//
+		Pnt3f up  = humans[0]->getUp();
+		up.normalize();
+		Pnt3f eye = humans[0]->getPosition()+up*3;
+		Pnt3f direction = humans[0]->getOrient();
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		gluPerspective(50.0, aspect, 3, 100);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		gluLookAt(eye.x + direction.x * 2, eye.y + direction.y * 2, eye.z + direction.z * 2,
+			eye.x + direction.x * 3, eye.y + direction.y *3, eye.z + direction.z * 3, up.x, up.y, up.z);
 
 		//glLoadIdentity();
 		update();
@@ -630,12 +645,9 @@ void TrainView::drawTrainObj2(float t, bool doingShadows)
 
 	Pnt3f cross_t = diff * Pnt3f(0, 1, 0);
 	cross_t.normalize();
-
-	//cross_t += orient_t;
 	float x = cross_t.x * orient_t.x +
 		cross_t.y * orient_t.y +
 		cross_t.z * orient_t.z;
-	//float x = sqrt(pow(orient_t.x, 2) + pow(orient_t.z, 2));
 	float theta = radiansToDegrees(atan2(x, orient_t.y));
 
 	train->rotateDegree = theta;
@@ -657,17 +669,13 @@ void TrainView::drawTrainObj2(float t, bool doingShadows)
 		Pnt3f diff = train->waypoints[tempIndex].getOrient(train->waypoints[(tempIndex + 1) % train->waypoints.size()]);
 		Pnt3f orient_t = train->wayorients[tempIndex];
 		orient_t.normalize();
-
+		cars[i]->up = orient_t;
 		Pnt3f cross_t = diff * Pnt3f(0,1,0);
 		cross_t.normalize();
-
-		//cross_t += orient_t;
 		float x = cross_t.x * orient_t.x +
 			cross_t.y * orient_t.y +
 			cross_t.z * orient_t.z ;
-		//float x = sqrt(pow(orient_t.x, 2) + pow(orient_t.z, 2));
 		float theta = radiansToDegrees(atan2(x, orient_t.y));
-		//if (cross_t.x * orient_t.x + cross_t.z * orient_t.z <= 0)theta=-theta;
 
 		cars[i]->rotateDegree = theta;
 		cars[i]->rotateTo(diff);
@@ -680,6 +688,7 @@ void TrainView::drawTrainObj2(float t, bool doingShadows)
 
 		for (size_t j = 0; j < humanNum; j++)
 		{
+			humans[i * humanNum + j]->up = orient_t;
 			humans[i * humanNum + j]->rotateDegree = theta;
 			humans[i * humanNum + j]->rotateTo(diff);
 			humans[i * humanNum + j]->moveTo(qt+ orient_t*5+ diff*j);
@@ -718,8 +727,6 @@ void TrainView::interpolation()
 }
 void TrainView::insertCar()
 {
-	player->play();
-
 	carNum++;
 	cars.push_back(new Model(sampleCar));
 	humans.push_back(new Model(sampleHuman));

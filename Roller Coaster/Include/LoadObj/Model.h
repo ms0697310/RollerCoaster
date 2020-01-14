@@ -24,7 +24,10 @@ public:
 	void moveTo(Pnt3f pos) { this->pos = pos; }
 	const Pnt3f getPosition() { return pos; }
 	const Pnt3f getOrient() { return orient; }
+	Pnt3f getUp(); 
 	float rotateDegree;
+	Pnt3f up;
+	
 private:
 	QString m_fileName;
 	QVector<Pnt3f> m_points;
@@ -33,6 +36,7 @@ private:
 	QVector<int> m_pointIndices;
 	Pnt3f pos;
 	Pnt3f orient;
+
 };
 
 #endif

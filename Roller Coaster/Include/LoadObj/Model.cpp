@@ -7,7 +7,7 @@
 #include <QtOpenGL/QtOpenGL>
 #include "Utilities/3dUtils.h"
 Model::Model(const QString &filePath, int s, Pnt3f p)
-	: m_fileName(QFileInfo(filePath).fileName()), rotateDegree(0)
+	: m_fileName(QFileInfo(filePath).fileName()), rotateDegree(0), up(0, 1, 0)
 {
 	QFile file(filePath);
 	if (!file.open(QIODevice::ReadOnly))
@@ -127,3 +127,7 @@ void Model::render(bool wireframe, bool normals) const
 }
 
 
+Pnt3f Model::getUp()
+{
+	return Pnt3f(up);
+}

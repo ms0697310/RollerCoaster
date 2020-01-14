@@ -37,14 +37,14 @@ public:
     QAction *aSavePath;
     QAction *aWorld;
     QAction *aTop;
-	QAction *aTrain;
-	QAction *aHuman;
+    QAction *aTrain;
     QAction *aLinear;
     QAction *aCardinal;
     QAction *aCubic;
     QAction *aLine;
     QAction *aTrack;
     QAction *aRoad;
+    QAction *aHuman;
     QWidget *centralWidget;
     QVBoxLayout *verticalLayout;
     QVBoxLayout *mainLayout;
@@ -97,7 +97,7 @@ public:
     {
         if (AppMainClass->objectName().isEmpty())
             AppMainClass->setObjectName(QString::fromUtf8("AppMainClass"));
-        AppMainClass->resize(1158, 769);
+        AppMainClass->resize(1280, 769);
         QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -133,9 +133,6 @@ public:
         aTrain = new QAction(AppMainClass);
         aTrain->setObjectName(QString::fromUtf8("aTrain"));
         aTrain->setCheckable(true);
-		aHuman = new QAction(AppMainClass);
-		aHuman->setObjectName(QString::fromUtf8("aHuman"));
-		aHuman->setCheckable(true);
         aLinear = new QAction(AppMainClass);
         aLinear->setObjectName(QString::fromUtf8("aLinear"));
         aLinear->setCheckable(false);
@@ -156,6 +153,8 @@ public:
         aRoad = new QAction(AppMainClass);
         aRoad->setObjectName(QString::fromUtf8("aRoad"));
         aRoad->setCheckable(true);
+        aHuman = new QAction(AppMainClass);
+        aHuman->setObjectName(QString::fromUtf8("aHuman"));
         centralWidget = new QWidget(AppMainClass);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -204,6 +203,7 @@ public:
 "border-radius: 5px;"));
         groupCamera->setAlignment(Qt::AlignCenter);
         comboCamera = new QComboBox(groupCamera);
+        comboCamera->addItem(QString());
         comboCamera->addItem(QString());
         comboCamera->addItem(QString());
         comboCamera->addItem(QString());
@@ -736,7 +736,7 @@ public:
         AppMainClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(AppMainClass);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1158, 25));
+        menuBar->setGeometry(QRect(0, 0, 1280, 21));
         menuFile = new QMenu(menuBar);
         menuFile->setObjectName(QString::fromUtf8("menuFile"));
         menuCamera = new QMenu(menuBar);
@@ -767,6 +767,7 @@ public:
         menuCamera->addAction(aWorld);
         menuCamera->addAction(aTop);
         menuCamera->addAction(aTrain);
+        menuCamera->addAction(aHuman);
         menuCurve->addAction(aLinear);
         menuCurve->addAction(aCardinal);
         menuCurve->addAction(aCubic);
@@ -796,10 +797,12 @@ public:
         aLine->setText(QCoreApplication::translate("AppMainClass", "Line", nullptr));
         aTrack->setText(QCoreApplication::translate("AppMainClass", "Track", nullptr));
         aRoad->setText(QCoreApplication::translate("AppMainClass", "Road", nullptr));
+        aHuman->setText(QCoreApplication::translate("AppMainClass", "Human", nullptr));
         groupCamera->setTitle(QCoreApplication::translate("AppMainClass", "Camera", nullptr));
         comboCamera->setItemText(0, QCoreApplication::translate("AppMainClass", "World", nullptr));
         comboCamera->setItemText(1, QCoreApplication::translate("AppMainClass", "Top", nullptr));
         comboCamera->setItemText(2, QCoreApplication::translate("AppMainClass", "Train", nullptr));
+        comboCamera->setItemText(3, QCoreApplication::translate("AppMainClass", "Human", nullptr));
 
         groupCurve->setTitle(QCoreApplication::translate("AppMainClass", "Curve", nullptr));
         comboCurve->setItemText(0, QCoreApplication::translate("AppMainClass", "Linear", nullptr));

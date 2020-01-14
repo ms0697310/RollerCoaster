@@ -251,6 +251,11 @@ void AppMain::ChangeCameraType( QString type )
 		this->trainview->camera = 2;
 		update();
 	}
+	else if (type == "Human")
+	{
+		this->trainview->camera = 3;
+		update();
+	}
 }
 
 void AppMain::ChangeCurveType( QString type )
@@ -503,7 +508,8 @@ void AppMain::UpdateCameraState( int index )
 {
 	ui.aWorld->setChecked( (index==0)?true:false );
 	ui.aTop	 ->setChecked( (index==1)?true:false );
-	ui.aTrain->setChecked( (index==2)?true:false );
+	ui.aTrain->setChecked((index == 2) ? true : false);
+	ui.aHuman->setChecked( (index==3)?true:false );
 }
 
 void AppMain::UpdateCurveState( int index )
