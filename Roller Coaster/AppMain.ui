@@ -1796,7 +1796,10 @@ QPushButton:pressed {
        </widget>
       </item>
       <item>
-       <widget class="QGroupBox" name="groupBox_8">
+       <widget class="QGroupBox" name="group_human_view">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="minimumSize">
          <size>
           <width>150</width>
@@ -1853,8 +1856,8 @@ QPushButton:pressed {
           <string/>
          </property>
          <property name="icon">
-          <iconset>
-           <normaloff>Resources/Icons/up.ico</normaloff>Resources/Icons/up.ico</iconset>
+          <iconset resource="AppMain.qrc">
+           <normaloff>:/AppMain/Resources/Icons/up.ico</normaloff>:/AppMain/Resources/Icons/up.ico</iconset>
          </property>
         </widget>
         <widget class="QPushButton" name="humanview_left">
@@ -1883,8 +1886,8 @@ QPushButton:pressed {
           <string/>
          </property>
          <property name="icon">
-          <iconset>
-           <normaloff>Resources/Icons/left.ico</normaloff>Resources/Icons/left.ico</iconset>
+          <iconset resource="AppMain.qrc">
+           <normaloff>:/AppMain/Resources/Icons/left.ico</normaloff>:/AppMain/Resources/Icons/left.ico</iconset>
          </property>
         </widget>
         <widget class="QPushButton" name="humanview_down">
@@ -1913,8 +1916,8 @@ QPushButton:pressed {
           <string/>
          </property>
          <property name="icon">
-          <iconset>
-           <normaloff>Resources/Icons/down.ico</normaloff>Resources/Icons/down.ico</iconset>
+          <iconset resource="AppMain.qrc">
+           <normaloff>:/AppMain/Resources/Icons/down.ico</normaloff>:/AppMain/Resources/Icons/down.ico</iconset>
          </property>
         </widget>
         <widget class="QPushButton" name="humanview_right">
@@ -1943,8 +1946,8 @@ QPushButton:pressed {
           <string/>
          </property>
          <property name="icon">
-          <iconset>
-           <normaloff>Resources/Icons/right.ico</normaloff>Resources/Icons/right.ico</iconset>
+          <iconset resource="AppMain.qrc">
+           <normaloff>:/AppMain/Resources/Icons/right.ico</normaloff>:/AppMain/Resources/Icons/right.ico</iconset>
          </property>
         </widget>
         <widget class="QPushButton" name="humanview_turn_left">
@@ -1973,8 +1976,8 @@ QPushButton:pressed {
           <string/>
          </property>
          <property name="icon">
-          <iconset>
-           <normaloff>Resources/Icons/turn left.ico</normaloff>Resources/Icons/turn left.ico</iconset>
+          <iconset resource="AppMain.qrc">
+           <normaloff>:/AppMain/Resources/Icons/turn left.ico</normaloff>:/AppMain/Resources/Icons/turn left.ico</iconset>
          </property>
         </widget>
         <widget class="QPushButton" name="humanview_turn_right">
@@ -2003,8 +2006,8 @@ QPushButton:pressed {
           <string/>
          </property>
          <property name="icon">
-          <iconset>
-           <normaloff>Resources/Icons/turn right.ico</normaloff>Resources/Icons/turn right.ico</iconset>
+          <iconset resource="AppMain.qrc">
+           <normaloff>:/AppMain/Resources/Icons/turn right.ico</normaloff>:/AppMain/Resources/Icons/turn right.ico</iconset>
          </property>
         </widget>
        </widget>

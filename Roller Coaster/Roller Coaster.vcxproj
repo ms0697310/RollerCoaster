@@ -183,6 +183,7 @@
     <ClCompile Include="Human.cpp" />
     <ClCompile Include="Include\LoadObj\Model.cpp" />
     <ClCompile Include="Src\AppMain.cpp" />
+    <ClCompile Include="Src\Background.cpp" />
     <ClCompile Include="Src\ControlPoint.cpp" />
     <ClCompile Include="Src\Hill.cpp" />
     <ClCompile Include="Src\main.cpp" />
@@ -224,6 +225,7 @@
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_AppMain.h" />
     <ClInclude Include="Human.h" />
+    <ClInclude Include="Include\Background.h" />
     <ClInclude Include="Include\ControlPoint.H" />
     <ClInclude Include="Include\Hill.h" />
     <ClInclude Include="Include\LoadObj\Model.h" />

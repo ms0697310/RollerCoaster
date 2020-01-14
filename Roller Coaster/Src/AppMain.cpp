@@ -63,6 +63,14 @@ AppMain::AppMain(QWidget *parent)
 	connect(ui.paraadd, SIGNAL(clicked()), this, SLOT(AddPara()));
 	connect(ui.parasub, SIGNAL(clicked()), this, SLOT(SubPara()));
 
+	connect(ui.humanview_up, SIGNAL(clicked()), this, SLOT(MoveHumanViewUp()));
+	connect(ui.humanview_down, SIGNAL(clicked()), this, SLOT(MoveHumanViewDown()));
+	connect(ui.humanview_left, SIGNAL(clicked()), this, SLOT(MoveHumanViewLeft()));
+	connect(ui.humanview_right, SIGNAL(clicked()), this, SLOT(MoveHumanViewRight()));
+	connect(ui.humanview_turn_left, SIGNAL(clicked()), this, SLOT(RotateHumanViewLeft()));
+	connect(ui.humanview_turn_right, SIGNAL(clicked()), this, SLOT(RotateHumanViewRight()));
+
+
 	initPath();
 }
 
@@ -249,6 +257,7 @@ void AppMain::TogglePanel()
 
 void AppMain::ChangeCameraType( QString type )
 {
+	humanViewEnableOrDisable(type == "Human");
 	if( type == "World" )
 	{
 		this->trainview->camera = 0;
@@ -267,6 +276,7 @@ void AppMain::ChangeCameraType( QString type )
 	else if (type == "Human")
 	{
 		this->trainview->camera = 3;
+		ui.humanview_up->setEnabled(true);
 		update();
 	}
 }
@@ -419,7 +429,13 @@ void AppMain::rollz(float dir)
 		this->m_Track.points[s].orient.x = si * old.y + co * old.x;
 	}
 	this->damageMe();
-} 
+}
+
+void AppMain::humanViewEnableOrDisable(bool enable)
+{
+	ui.group_human_view->setEnabled(enable);
+}
+
 
 void AppMain::RotateControlPointAddZ()
 {
@@ -477,6 +493,34 @@ void AppMain::AddPeopleView()
 void AppMain::SubPeopleView()
 {
 	trainview->frontHuman();
+}
+
+void AppMain::MoveHumanViewUp()
+{
+	trainview->humans[trainview->humanViewIndex]->goForward();
+}
+
+void AppMain::MoveHumanViewDown()
+{
+	trainview->humans[trainview->humanViewIndex]->goBackward();
+}
+
+void AppMain::MoveHumanViewLeft()
+{
+	trainview->humans[trainview->humanViewIndex]->goLeft();
+}
+
+void AppMain::MoveHumanViewRight()
+{
+	trainview->humans[trainview->humanViewIndex]->goRight();
+}
+
+void AppMain::RotateHumanViewLeft()
+{
+}
+
+void AppMain::RotateHumanViewRight()
+{
 }
 
 void AppMain::ChangeCamToWorld()
