@@ -58,7 +58,7 @@ void TrainView::initializeGL()
 	hill = new Hill();
 	hill->Init();
 
-	bg = new Hill();
+	bg = new BackGround();
 	bg->Init();
 
 	//初始化石頭

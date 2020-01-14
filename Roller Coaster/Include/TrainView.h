@@ -115,7 +115,7 @@ public:
 	Square* square;
 	Wave* wave;
 	Hill* hill;
-	BackGround* bgbg;
+	BackGround* bg;
 	std::vector<Stone*> stone;
 	GLfloat ProjectionMatrex[16];
 	GLfloat ModelViewMatrex[16];
