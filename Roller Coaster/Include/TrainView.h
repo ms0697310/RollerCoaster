@@ -55,8 +55,8 @@ public:
 	void insertCar();
 	void deleteCar();
 	//for human view change
-	void preHuman();
-	void postHuman();
+	void frontHuman();
+	void behindHuman();
 
 	//void drawTrain();
 	// setup the projection - assuming that the projection stack has been
