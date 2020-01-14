@@ -54,6 +54,15 @@ void TrainView::initializeGL()
 	wave->Init();
 	hill = new Hill();
 	hill->Init();
+
+	//初始化石頭
+	GLfloat centerX = -30, centerZ = -30, r = 30;
+	for (float deta = 0; deta < 6.28; deta += 6.28 / 20){
+		GLfloat x = r * cos(deta), z = r * sin(deta);
+		Stone* newStone = new Stone(x + centerX, z + centerZ);
+		newStone->Init();
+		stone.push_back(newStone);
+	}
 	frameTime.start();
 	QMediaPlaylist* playlist = new QMediaPlaylist();
 	playlist->addMedia(QUrl("./Music/bgm.mp3"));
@@ -247,6 +256,9 @@ void TrainView::paintGL()
 		wave->PaintObject();
 	wave->End();
 
+	//石頭
+	drawStone();
+
 	//煙火
 	ProcessParticles(t_time);
 	DrawParticles();
@@ -328,6 +340,7 @@ setProjection()
 		update();
 	}
 }
+
 
 //************************************************************************
 //
@@ -638,13 +651,15 @@ void TrainView::drawTrainObj2(float t, bool doingShadows)
 				glColor3ub(254, 225, 185);
 			humans[i * humanNum + j]->render(false, false);
 		}
-		
-		
-		
-		
 	}
-
 }
+
+void TrainView::drawStone() {
+	for (auto iter = stone.begin(); iter < stone.end(); iter++) {
+		(*iter)->Paint(ProjectionMatrex, ModelViewMatrex);
+	}
+}
+
 void TrainView::interpolation()
 {
 	if (m_pTrack->points.size() == 0)return;

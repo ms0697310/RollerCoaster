@@ -55,6 +55,9 @@ public:
     QComboBox *comboCurve;
     QGroupBox *groupTrack;
     QComboBox *comboTrack;
+    QGroupBox *groupCar;
+    QPushButton *car_add;
+    QPushButton *car_sub;
     QGroupBox *groupPlay;
     QPushButton *bPlay;
     QGroupBox *groupCP;
@@ -66,9 +69,15 @@ public:
     QGroupBox *groupBox_2;
     QPushButton *rcpzadd;
     QPushButton *rcpzsub;
-    QGroupBox *groupCar;
-    QPushButton *car_add;
-    QPushButton *car_sub;
+    QGroupBox *groupBox_3;
+    QPushButton *rcpzadd_2;
+    QPushButton *rcpzsub_2;
+    QGroupBox *groupBox_4;
+    QPushButton *mcpyadd;
+    QPushButton *mcpysub;
+    QGroupBox *groupBox_5;
+    QPushButton *rcpzadd_4;
+    QPushButton *rcpzsub_4;
     QSpacerItem *horizontalSpacer_2;
     QHBoxLayout *horizontalLayout_2;
     QSpacerItem *horizontalSpacer_4;
@@ -324,6 +333,53 @@ public:
 
         horizontalLayout->addWidget(groupTrack);
 
+        groupCar = new QGroupBox(centralWidget);
+        groupCar->setObjectName(QString::fromUtf8("groupCar"));
+        groupCar->setMinimumSize(QSize(120, 150));
+        groupCar->setMaximumSize(QSize(200, 150));
+        groupCar->setFont(font1);
+        groupCar->setStyleSheet(QString::fromUtf8("background-color: rgb(249, 249, 249);\n"
+"border-radius: 5px;"));
+        groupCar->setAlignment(Qt::AlignCenter);
+        car_add = new QPushButton(groupCar);
+        car_add->setObjectName(QString::fromUtf8("car_add"));
+        car_add->setGeometry(QRect(10, 40, 100, 44));
+        sizePolicy2.setHeightForWidth(car_add->sizePolicy().hasHeightForWidth());
+        car_add->setSizePolicy(sizePolicy2);
+        car_add->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"	background-color: rgb(80, 80, 80);\n"
+"	color: rgb(240, 240, 240);\n"
+"    border-radius: 10px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"	background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 rgba(172, 172, 172, 255), stop:1 rgba(0, 0, 0, 203));\n"
+"     padding-top: 10px;\n"
+"     padding-left: 5px;\n"
+"}"));
+        QIcon icon2;
+        icon2.addFile(QString::fromUtf8(":/AppMain/madd.png"), QSize(), QIcon::Normal, QIcon::Off);
+        car_add->setIcon(icon2);
+        car_sub = new QPushButton(groupCar);
+        car_sub->setObjectName(QString::fromUtf8("car_sub"));
+        car_sub->setGeometry(QRect(10, 90, 100, 44));
+        car_sub->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"	background-color: rgb(80, 80, 80);\n"
+"	color: rgb(240, 240, 240);\n"
+"    border-radius: 10px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"	background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 rgba(172, 172, 172, 255), stop:1 rgba(0, 0, 0, 203));\n"
+"     padding-top: 10px;\n"
+"     padding-left: 5px;\n"
+"}"));
+        QIcon icon3;
+        icon3.addFile(QString::fromUtf8(":/AppMain/mdelete.png"), QSize(), QIcon::Normal, QIcon::Off);
+        car_sub->setIcon(icon3);
+
+        horizontalLayout->addWidget(groupCar);
+
         groupPlay = new QGroupBox(centralWidget);
         groupPlay->setObjectName(QString::fromUtf8("groupPlay"));
         sizePolicy2.setHeightForWidth(groupPlay->sizePolicy().hasHeightForWidth());
@@ -345,9 +401,9 @@ public:
 "\n"
 "QPushButton:pressed {\n"
 "}"));
-        QIcon icon2;
-        icon2.addFile(QString::fromUtf8(":/AppMain/Resources/Icons/play.ico"), QSize(), QIcon::Normal, QIcon::Off);
-        bPlay->setIcon(icon2);
+        QIcon icon4;
+        icon4.addFile(QString::fromUtf8(":/AppMain/Resources/Icons/play.ico"), QSize(), QIcon::Normal, QIcon::Off);
+        bPlay->setIcon(icon4);
         bPlay->setIconSize(QSize(40, 40));
 
         horizontalLayout->addWidget(groupPlay);
@@ -383,9 +439,7 @@ public:
 "     padding-top: 10px;\n"
 "     padding-left: 5px;\n"
 "}"));
-        QIcon icon3;
-        icon3.addFile(QString::fromUtf8(":/AppMain/madd.png"), QSize(), QIcon::Normal, QIcon::Off);
-        bAdd->setIcon(icon3);
+        bAdd->setIcon(icon2);
         bAdd->setIconSize(QSize(14, 14));
         bDelete = new QPushButton(groupCP);
         bDelete->setObjectName(QString::fromUtf8("bDelete"));
@@ -405,9 +459,7 @@ public:
 "     padding-top: 10px;\n"
 "     padding-left: 5px;\n"
 "}"));
-        QIcon icon4;
-        icon4.addFile(QString::fromUtf8(":/AppMain/mdelete.png"), QSize(), QIcon::Normal, QIcon::Off);
-        bDelete->setIcon(icon4);
+        bDelete->setIcon(icon3);
         bDelete->setIconSize(QSize(12, 12));
 
         horizontalLayout->addWidget(groupCP);
@@ -453,7 +505,7 @@ public:
 "     padding-top: 10px;\n"
 "     padding-left: 5px;\n"
 "}"));
-        rcpxadd->setIcon(icon3);
+        rcpxadd->setIcon(icon2);
         rcpxadd->setIconSize(QSize(14, 14));
         rcpxsub = new QPushButton(groupBox);
         rcpxsub->setObjectName(QString::fromUtf8("rcpxsub"));
@@ -469,7 +521,7 @@ public:
 "     padding-top: 10px;\n"
 "     padding-left: 5px;\n"
 "}"));
-        rcpxsub->setIcon(icon4);
+        rcpxsub->setIcon(icon3);
 
         horizontalLayout->addWidget(groupBox);
 
@@ -496,7 +548,7 @@ public:
 "     padding-top: 10px;\n"
 "     padding-left: 5px;\n"
 "}"));
-        rcpzadd->setIcon(icon3);
+        rcpzadd->setIcon(icon2);
         rcpzsub = new QPushButton(groupBox_2);
         rcpzsub->setObjectName(QString::fromUtf8("rcpzsub"));
         rcpzsub->setGeometry(QRect(10, 90, 100, 44));
@@ -511,24 +563,63 @@ public:
 "     padding-top: 10px;\n"
 "     padding-left: 5px;\n"
 "}"));
-        rcpzsub->setIcon(icon4);
+        rcpzsub->setIcon(icon3);
+        groupBox_3 = new QGroupBox(groupBox_2);
+        groupBox_3->setObjectName(QString::fromUtf8("groupBox_3"));
+        groupBox_3->setGeometry(QRect(110, 70, 120, 150));
+        groupBox_3->setMinimumSize(QSize(120, 150));
+        groupBox_3->setMaximumSize(QSize(200, 150));
+        groupBox_3->setFont(font1);
+        groupBox_3->setStyleSheet(QString::fromUtf8("background-color: rgb(249, 249, 249);\n"
+"border-radius: 5px;"));
+        rcpzadd_2 = new QPushButton(groupBox_3);
+        rcpzadd_2->setObjectName(QString::fromUtf8("rcpzadd_2"));
+        rcpzadd_2->setGeometry(QRect(10, 40, 100, 44));
+        sizePolicy2.setHeightForWidth(rcpzadd_2->sizePolicy().hasHeightForWidth());
+        rcpzadd_2->setSizePolicy(sizePolicy2);
+        rcpzadd_2->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"	background-color: rgb(80, 80, 80);\n"
+"	color: rgb(240, 240, 240);\n"
+"    border-radius: 10px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"	background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 rgba(172, 172, 172, 255), stop:1 rgba(0, 0, 0, 203));\n"
+"     padding-top: 10px;\n"
+"     padding-left: 5px;\n"
+"}"));
+        rcpzadd_2->setIcon(icon2);
+        rcpzsub_2 = new QPushButton(groupBox_3);
+        rcpzsub_2->setObjectName(QString::fromUtf8("rcpzsub_2"));
+        rcpzsub_2->setGeometry(QRect(10, 90, 100, 44));
+        rcpzsub_2->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"	background-color: rgb(80, 80, 80);\n"
+"	color: rgb(240, 240, 240);\n"
+"    border-radius: 10px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"	background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 rgba(172, 172, 172, 255), stop:1 rgba(0, 0, 0, 203));\n"
+"     padding-top: 10px;\n"
+"     padding-left: 5px;\n"
+"}"));
+        rcpzsub_2->setIcon(icon3);
 
         horizontalLayout->addWidget(groupBox_2);
 
-        groupCar = new QGroupBox(centralWidget);
-        groupCar->setObjectName(QString::fromUtf8("groupCar"));
-        groupCar->setMinimumSize(QSize(120, 150));
-        groupCar->setMaximumSize(QSize(200, 150));
-        groupCar->setFont(font1);
-        groupCar->setStyleSheet(QString::fromUtf8("background-color: rgb(249, 249, 249);\n"
+        groupBox_4 = new QGroupBox(centralWidget);
+        groupBox_4->setObjectName(QString::fromUtf8("groupBox_4"));
+        groupBox_4->setMinimumSize(QSize(120, 150));
+        groupBox_4->setMaximumSize(QSize(200, 150));
+        groupBox_4->setFont(font1);
+        groupBox_4->setStyleSheet(QString::fromUtf8("background-color: rgb(249, 249, 249);\n"
 "border-radius: 5px;"));
-        groupCar->setAlignment(Qt::AlignCenter);
-        car_add = new QPushButton(groupCar);
-        car_add->setObjectName(QString::fromUtf8("car_add"));
-        car_add->setGeometry(QRect(10, 40, 100, 44));
-        sizePolicy2.setHeightForWidth(car_add->sizePolicy().hasHeightForWidth());
-        car_add->setSizePolicy(sizePolicy2);
-        car_add->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+        mcpyadd = new QPushButton(groupBox_4);
+        mcpyadd->setObjectName(QString::fromUtf8("mcpyadd"));
+        mcpyadd->setGeometry(QRect(10, 40, 100, 44));
+        sizePolicy2.setHeightForWidth(mcpyadd->sizePolicy().hasHeightForWidth());
+        mcpyadd->setSizePolicy(sizePolicy2);
+        mcpyadd->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "	background-color: rgb(80, 80, 80);\n"
 "	color: rgb(240, 240, 240);\n"
 "    border-radius: 10px;\n"
@@ -539,11 +630,11 @@ public:
 "     padding-top: 10px;\n"
 "     padding-left: 5px;\n"
 "}"));
-        car_add->setIcon(icon3);
-        car_sub = new QPushButton(groupCar);
-        car_sub->setObjectName(QString::fromUtf8("car_sub"));
-        car_sub->setGeometry(QRect(10, 90, 100, 44));
-        car_sub->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+        mcpyadd->setIcon(icon2);
+        mcpysub = new QPushButton(groupBox_4);
+        mcpysub->setObjectName(QString::fromUtf8("mcpysub"));
+        mcpysub->setGeometry(QRect(10, 90, 100, 44));
+        mcpysub->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "	background-color: rgb(80, 80, 80);\n"
 "	color: rgb(240, 240, 240);\n"
 "    border-radius: 10px;\n"
@@ -554,9 +645,49 @@ public:
 "     padding-top: 10px;\n"
 "     padding-left: 5px;\n"
 "}"));
-        car_sub->setIcon(icon4);
+        mcpysub->setIcon(icon3);
+        groupBox_5 = new QGroupBox(groupBox_4);
+        groupBox_5->setObjectName(QString::fromUtf8("groupBox_5"));
+        groupBox_5->setGeometry(QRect(110, 70, 120, 150));
+        groupBox_5->setMinimumSize(QSize(120, 150));
+        groupBox_5->setMaximumSize(QSize(200, 150));
+        groupBox_5->setFont(font1);
+        groupBox_5->setStyleSheet(QString::fromUtf8("background-color: rgb(249, 249, 249);\n"
+"border-radius: 5px;"));
+        rcpzadd_4 = new QPushButton(groupBox_5);
+        rcpzadd_4->setObjectName(QString::fromUtf8("rcpzadd_4"));
+        rcpzadd_4->setGeometry(QRect(10, 40, 100, 44));
+        sizePolicy2.setHeightForWidth(rcpzadd_4->sizePolicy().hasHeightForWidth());
+        rcpzadd_4->setSizePolicy(sizePolicy2);
+        rcpzadd_4->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"	background-color: rgb(80, 80, 80);\n"
+"	color: rgb(240, 240, 240);\n"
+"    border-radius: 10px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"	background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 rgba(172, 172, 172, 255), stop:1 rgba(0, 0, 0, 203));\n"
+"     padding-top: 10px;\n"
+"     padding-left: 5px;\n"
+"}"));
+        rcpzadd_4->setIcon(icon2);
+        rcpzsub_4 = new QPushButton(groupBox_5);
+        rcpzsub_4->setObjectName(QString::fromUtf8("rcpzsub_4"));
+        rcpzsub_4->setGeometry(QRect(10, 90, 100, 44));
+        rcpzsub_4->setStyleSheet(QString::fromUtf8("QPushButton {\n"
+"	background-color: rgb(80, 80, 80);\n"
+"	color: rgb(240, 240, 240);\n"
+"    border-radius: 10px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"	background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 rgba(172, 172, 172, 255), stop:1 rgba(0, 0, 0, 203));\n"
+"     padding-top: 10px;\n"
+"     padding-left: 5px;\n"
+"}"));
+        rcpzsub_4->setIcon(icon3);
 
-        horizontalLayout->addWidget(groupCar);
+        horizontalLayout->addWidget(groupBox_4);
 
         horizontalSpacer_2 = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
@@ -676,6 +807,9 @@ public:
         comboTrack->setItemText(1, QCoreApplication::translate("AppMainClass", "Track", nullptr));
         comboTrack->setItemText(2, QCoreApplication::translate("AppMainClass", "Road", nullptr));
 
+        groupCar->setTitle(QCoreApplication::translate("AppMainClass", "Car", nullptr));
+        car_add->setText(QString());
+        car_sub->setText(QString());
         groupPlay->setTitle(QCoreApplication::translate("AppMainClass", "Play", nullptr));
         bPlay->setText(QString());
         groupCP->setTitle(QCoreApplication::translate("AppMainClass", "Ctrl Point", nullptr));
@@ -687,9 +821,15 @@ public:
         groupBox_2->setTitle(QCoreApplication::translate("AppMainClass", "Rotate CP Z", nullptr));
         rcpzadd->setText(QString());
         rcpzsub->setText(QString());
-        groupCar->setTitle(QCoreApplication::translate("AppMainClass", "Car", nullptr));
-        car_add->setText(QString());
-        car_sub->setText(QString());
+        groupBox_3->setTitle(QCoreApplication::translate("AppMainClass", "Rotate CP Z", nullptr));
+        rcpzadd_2->setText(QString());
+        rcpzsub_2->setText(QString());
+        groupBox_4->setTitle(QCoreApplication::translate("AppMainClass", "Move CP Y", nullptr));
+        mcpyadd->setText(QString());
+        mcpysub->setText(QString());
+        groupBox_5->setTitle(QCoreApplication::translate("AppMainClass", "Rotate CP Z", nullptr));
+        rcpzadd_4->setText(QString());
+        rcpzsub_4->setText(QString());
         menuFile->setTitle(QCoreApplication::translate("AppMainClass", "File", nullptr));
         menuCamera->setTitle(QCoreApplication::translate("AppMainClass", "Camera", nullptr));
         menuCurve->setTitle(QCoreApplication::translate("AppMainClass", "Curve", nullptr));

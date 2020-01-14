@@ -55,6 +55,7 @@ private:
 	void UpdateTrackState( int index );
 	void UpdateVelocityState( int index );
 	void rollx( float dir );
+	void movey(float height);
 	void rollz( float dir );
 	Ui::AppMainClass ui;
 
@@ -88,6 +89,8 @@ private:
 		void RotateControlPointSubX();
 		void RotateControlPointAddZ();
 		void RotateControlPointSubZ();
+		void MoveControlPointAddY();
+		void MoveControlPointSubY();
 
 		void AddCar();
 		void SubCar();

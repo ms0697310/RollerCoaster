@@ -10,8 +10,6 @@ void Hill::PaintObject()
 	// 計算Hill的點的位置與法向量
 	vertices.clear();
 	normal.clear();
-	GLfloat A[] = { 5, 3, 2 };
-	GLfloat D[][2] = { {0.04, 0.01}, {0.02, 0.05}, {0.003, 0.003} };
 	for (GLfloat xx = -100.0f; xx < 100.0f; xx+=10) {
 		for (GLfloat zz = -100.0f; zz < 100.0f; zz+=10) {
 			for (int mode = 0; mode < 4; mode++) {
@@ -20,15 +18,8 @@ void Hill::PaintObject()
 				QVector3D normal_point, point[4];
 				GLfloat point_move[][2] = { {0, 0}, {0, -0.5}, {-0.5, 0} };
 				for (int move = 0; move < 3; move++) {
-					GLfloat tmpY = 0;
 					point[move].setX(x + point_move[move][0]), point[move].setZ(z + point_move[move][1]);
-					int totalHeight = 0;
-					for (int i = 0; i < 2; i++) {
-						tmpY += A[i] * sin(D[i][0] * point[move].x() + D[i][1] * point[move].z());
-						totalHeight += A[i];
-					}
-					tmpY += tmpY * ((totalHeight - tmpY > 0 ? tmpY : -tmpY) / totalHeight);
-					point[move].setY(tmpY);
+					point[move].setY(ComputePoint(point[move].x(), point[move].z()));
 				}
 				QVector3D V1 = point[1] - point[0], V2 = point[2] - point[0];
 				normal_point.setX(V1.y() * V2.z() - V1.z() * V2.y());
@@ -56,4 +47,18 @@ void Hill::PaintObject()
 	normal_vbo.release();
 
 	glDrawArrays(GL_QUADS, 0, vertices.size());
+}
+
+float Hill::ComputePoint(float xx, float zz)
+{
+	GLfloat A[] = { 5, 3, 2 };
+	GLfloat D[][2] = { {0.04, 0.01}, {0.02, 0.05}, {0.003, 0.003} };
+	GLfloat tmpY = 0;
+	int totalHeight = 0;
+	for (int i = 0; i < 2; i++) {
+		tmpY += A[i] * sin(D[i][0] * xx + D[i][1] * zz);
+		totalHeight += A[i];
+	}
+	tmpY += tmpY * ((totalHeight - tmpY > 0 ? tmpY : -tmpY) / totalHeight);
+	return tmpY;
 }

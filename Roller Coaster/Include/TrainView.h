@@ -16,7 +16,9 @@
 #include "Wave.h"
 #include "Train.h"
 #include "Hill.h"
+#include "Stone.h"
 #include <iostream>
+#include <vector>
 
 class AppMain;
 class CTrack;
@@ -48,6 +50,7 @@ public:
 	void drawTrain(float);
 	void drawTrainObj(float);
 	void drawTrainObj2(float, bool doingShadows);
+	void drawStone();
 	void interpolation();
 	void insertCar();
 	void deleteCar();
@@ -105,6 +108,7 @@ public:
 	Square* square;
 	Wave* wave;
 	Hill* hill;
+	std::vector<Stone*> stone;
 	GLfloat ProjectionMatrex[16];
 	GLfloat ModelViewMatrex[16];
 	QVector<QOpenGLTexture*> Textures;
