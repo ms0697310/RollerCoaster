@@ -327,7 +327,7 @@ setProjection()
 		Pnt3f up=train->getUp();
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		gluPerspective(50.0, aspect, 9, 100);
+		gluPerspective(50.0, aspect, 7, 100);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		gluLookAt(eye.x + direction.x*4, eye.y + direction.y * 4, eye.z + direction.z * 4,
@@ -626,12 +626,17 @@ void TrainView::drawTrainObj2(float t, bool doingShadows)
 	Pnt3f diff = train->waypoints[index].getOrient(train->waypoints[(index + 1) % train->waypoints.size()]);
 	Pnt3f orient_t = train->wayorients[index];
 	orient_t.normalize(); 
-	Pnt3f cross_t=diff* orient_t;
-	cross_t.normalize();
-	float x = sqrt(pow(orient_t.x, 2) + pow(orient_t.z, 2));
+	train->up = orient_t;
 
-	if (cross_t.x*orient_t.x+ cross_t.z* orient_t.z <= 0)x = -x;
-	float theta = radiansToDegrees(atan2(x,orient_t.y));
+	Pnt3f cross_t = diff * Pnt3f(0, 1, 0);
+	cross_t.normalize();
+
+	//cross_t += orient_t;
+	float x = cross_t.x * orient_t.x +
+		cross_t.y * orient_t.y +
+		cross_t.z * orient_t.z;
+	//float x = sqrt(pow(orient_t.x, 2) + pow(orient_t.z, 2));
+	float theta = radiansToDegrees(atan2(x, orient_t.y));
 
 	train->rotateDegree = theta;
 	train->rotateTo(diff);
@@ -653,12 +658,16 @@ void TrainView::drawTrainObj2(float t, bool doingShadows)
 		Pnt3f orient_t = train->wayorients[tempIndex];
 		orient_t.normalize();
 
-		Pnt3f cross_t = diff * orient_t;
+		Pnt3f cross_t = diff * Pnt3f(0,1,0);
 		cross_t.normalize();
-		cross_t += orient_t;
-		float x = sqrt(pow(orient_t.x, 2) + pow(orient_t.z, 2));
+
+		//cross_t += orient_t;
+		float x = cross_t.x * orient_t.x +
+			cross_t.y * orient_t.y +
+			cross_t.z * orient_t.z ;
+		//float x = sqrt(pow(orient_t.x, 2) + pow(orient_t.z, 2));
 		float theta = radiansToDegrees(atan2(x, orient_t.y));
-		if (cross_t.x * orient_t.x + cross_t.z * orient_t.z <= 0)theta=-theta;
+		//if (cross_t.x * orient_t.x + cross_t.z * orient_t.z <= 0)theta=-theta;
 
 		cars[i]->rotateDegree = theta;
 		cars[i]->rotateTo(diff);
