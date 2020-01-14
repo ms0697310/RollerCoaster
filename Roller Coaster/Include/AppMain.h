@@ -96,6 +96,12 @@ private:
 		void AddCar();
 		void SubCar();
 
+		void AddPara();
+		void SubPara();
+
+		void AddPeopleView();
+		void SubPeopleView();
+
 protected:
 	bool eventFilter(QObject *watched, QEvent *e); 
 };

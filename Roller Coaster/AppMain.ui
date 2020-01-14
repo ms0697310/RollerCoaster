@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1280</width>
+    <width>1662</width>
     <height>769</height>
    </rect>
   </property>
@@ -89,6 +89,28 @@
          <size>
           <width>0</width>
           <height>0</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_5">
+        <property name="minimumSize">
+         <size>
+          <width>120</width>
+          <height>120</height>
+         </size>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Expanding</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>117</width>
+          <height>117</height>
          </size>
         </property>
        </spacer>
@@ -513,6 +535,209 @@ QPushButton:pressed {
           <iconset resource="AppMain.qrc">
            <normaloff>:/AppMain/mdelete.png</normaloff>:/AppMain/mdelete.png</iconset>
          </property>
+        </widget>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupBox_6">
+        <property name="minimumSize">
+         <size>
+          <width>120</width>
+          <height>150</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>200</width>
+          <height>150</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Comic Sans MS</family>
+          <pointsize>10</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(249, 249, 249);
+border-radius: 5px;</string>
+        </property>
+        <property name="title">
+         <string>People</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+        <widget class="QPushButton" name="peopleadd">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>40</y>
+           <width>100</width>
+           <height>44</height>
+          </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+	background-color: rgb(80, 80, 80);
+	color: rgb(240, 240, 240);
+    border-radius: 10px;
+}
+
+QPushButton:pressed {
+	background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 rgba(172, 172, 172, 255), stop:1 rgba(0, 0, 0, 203));
+     padding-top: 10px;
+     padding-left: 5px;
+}</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="AppMain.qrc">
+           <normaloff>:/AppMain/madd.png</normaloff>:/AppMain/madd.png</iconset>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="peoplesub">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>90</y>
+           <width>100</width>
+           <height>44</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+	background-color: rgb(80, 80, 80);
+	color: rgb(240, 240, 240);
+    border-radius: 10px;
+}
+
+QPushButton:pressed {
+	background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 rgba(172, 172, 172, 255), stop:1 rgba(0, 0, 0, 203));
+     padding-top: 10px;
+     padding-left: 5px;
+}</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="AppMain.qrc">
+           <normaloff>:/AppMain/mdelete.png</normaloff>:/AppMain/mdelete.png</iconset>
+         </property>
+        </widget>
+        <widget class="QGroupBox" name="groupBox_7">
+         <property name="geometry">
+          <rect>
+           <x>110</x>
+           <y>70</y>
+           <width>120</width>
+           <height>150</height>
+          </rect>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>120</width>
+           <height>150</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>200</width>
+           <height>150</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Comic Sans MS</family>
+           <pointsize>10</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(249, 249, 249);
+border-radius: 5px;</string>
+         </property>
+         <property name="title">
+          <string>Rotate CP Z</string>
+         </property>
+         <widget class="QPushButton" name="rcpzadd_5">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>40</y>
+            <width>100</width>
+            <height>44</height>
+           </rect>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+	background-color: rgb(80, 80, 80);
+	color: rgb(240, 240, 240);
+    border-radius: 10px;
+}
+
+QPushButton:pressed {
+	background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 rgba(172, 172, 172, 255), stop:1 rgba(0, 0, 0, 203));
+     padding-top: 10px;
+     padding-left: 5px;
+}</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset resource="AppMain.qrc">
+            <normaloff>:/AppMain/madd.png</normaloff>:/AppMain/madd.png</iconset>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="rcpzsub_5">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>90</y>
+            <width>100</width>
+            <height>44</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+	background-color: rgb(80, 80, 80);
+	color: rgb(240, 240, 240);
+    border-radius: 10px;
+}
+
+QPushButton:pressed {
+	background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 rgba(172, 172, 172, 255), stop:1 rgba(0, 0, 0, 203));
+     padding-top: 10px;
+     padding-left: 5px;
+}</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset resource="AppMain.qrc">
+            <normaloff>:/AppMain/mdelete.png</normaloff>:/AppMain/mdelete.png</iconset>
+          </property>
+         </widget>
         </widget>
        </widget>
       </item>
@@ -1193,6 +1418,9 @@ border-radius: 5px;</string>
         <property name="title">
          <string>Move CP Y</string>
         </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
         <widget class="QPushButton" name="mcpyadd">
          <property name="geometry">
           <rect>
@@ -1365,6 +1593,209 @@ QPushButton:pressed {
        </widget>
       </item>
       <item>
+       <widget class="QGroupBox" name="Curve_GROUP">
+        <property name="minimumSize">
+         <size>
+          <width>120</width>
+          <height>150</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>200</width>
+          <height>150</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Comic Sans MS</family>
+          <pointsize>10</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(249, 249, 249);
+border-radius: 5px;</string>
+        </property>
+        <property name="title">
+         <string>Curve Para</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+        <widget class="QPushButton" name="paraadd">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>40</y>
+           <width>100</width>
+           <height>44</height>
+          </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+	background-color: rgb(80, 80, 80);
+	color: rgb(240, 240, 240);
+    border-radius: 10px;
+}
+
+QPushButton:pressed {
+	background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 rgba(172, 172, 172, 255), stop:1 rgba(0, 0, 0, 203));
+     padding-top: 10px;
+     padding-left: 5px;
+}</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="AppMain.qrc">
+           <normaloff>:/AppMain/madd.png</normaloff>:/AppMain/madd.png</iconset>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="parasub">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>90</y>
+           <width>100</width>
+           <height>44</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+	background-color: rgb(80, 80, 80);
+	color: rgb(240, 240, 240);
+    border-radius: 10px;
+}
+
+QPushButton:pressed {
+	background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 rgba(172, 172, 172, 255), stop:1 rgba(0, 0, 0, 203));
+     padding-top: 10px;
+     padding-left: 5px;
+}</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="AppMain.qrc">
+           <normaloff>:/AppMain/mdelete.png</normaloff>:/AppMain/mdelete.png</iconset>
+         </property>
+        </widget>
+        <widget class="QGroupBox" name="groupBox_9">
+         <property name="geometry">
+          <rect>
+           <x>110</x>
+           <y>70</y>
+           <width>120</width>
+           <height>150</height>
+          </rect>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>120</width>
+           <height>150</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>200</width>
+           <height>150</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Comic Sans MS</family>
+           <pointsize>10</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(249, 249, 249);
+border-radius: 5px;</string>
+         </property>
+         <property name="title">
+          <string>Rotate CP Z</string>
+         </property>
+         <widget class="QPushButton" name="rcpzadd_6">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>40</y>
+            <width>100</width>
+            <height>44</height>
+           </rect>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+	background-color: rgb(80, 80, 80);
+	color: rgb(240, 240, 240);
+    border-radius: 10px;
+}
+
+QPushButton:pressed {
+	background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 rgba(172, 172, 172, 255), stop:1 rgba(0, 0, 0, 203));
+     padding-top: 10px;
+     padding-left: 5px;
+}</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset resource="AppMain.qrc">
+            <normaloff>:/AppMain/madd.png</normaloff>:/AppMain/madd.png</iconset>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="rcpzsub_6">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>90</y>
+            <width>100</width>
+            <height>44</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+	background-color: rgb(80, 80, 80);
+	color: rgb(240, 240, 240);
+    border-radius: 10px;
+}
+
+QPushButton:pressed {
+	background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 rgba(172, 172, 172, 255), stop:1 rgba(0, 0, 0, 203));
+     padding-top: 10px;
+     padding-left: 5px;
+}</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset resource="AppMain.qrc">
+            <normaloff>:/AppMain/mdelete.png</normaloff>:/AppMain/mdelete.png</iconset>
+          </property>
+         </widget>
+        </widget>
+       </widget>
+      </item>
+      <item>
        <spacer name="horizontalSpacer_2">
         <property name="minimumSize">
          <size>
@@ -1407,7 +1838,7 @@ QPushButton:pressed {
        <widget class="QSlider" name="sSpeed">
         <property name="minimumSize">
          <size>
-          <width>850</width>
+          <width>1400</width>
           <height>0</height>
          </size>
         </property>
@@ -1456,8 +1887,8 @@ QPushButton:pressed {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1280</width>
-     <height>21</height>
+     <width>1662</width>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -1624,6 +2055,9 @@ QPushButton:pressed {
    </property>
   </action>
   <action name="aHuman">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Human</string>
    </property>

@@ -33,7 +33,7 @@ AppMain::AppMain(QWidget *parent)
 	connect( ui.aWorld		,SIGNAL(triggered()),this,SLOT(ChangeCamToWorld())	);
 	connect( ui.aTop		,SIGNAL(triggered()),this,SLOT(ChangeCamToTop())	);
 	connect( ui.aTrain		,SIGNAL(triggered()),this,SLOT(ChangeCamToTrain())	);
-	connect( ui.aHuman      ,SIGNAL(triggered()),this,SLOT(ChangeCamToHuman())  );
+	connect( ui.aHuman		,SIGNAL(triggered()),this,SLOT(ChangeCamToHuman())  );
 
 	connect( ui.comboCurve	,SIGNAL(currentIndexChanged(QString)),this,SLOT(ChangeCurveType(QString)));
 	connect( ui.aLinear		,SIGNAL(triggered()),this,SLOT(ChangeCurveToLinear())	);
@@ -58,6 +58,10 @@ AppMain::AppMain(QWidget *parent)
 	connect( ui.car_sub, SIGNAL(clicked()), this, SLOT(SubCar()));
 	connect(ui.mcpyadd, SIGNAL(clicked()), this, SLOT(MoveControlPointAddY()));
 	connect(ui.mcpysub, SIGNAL(clicked()), this, SLOT(MoveControlPointSubY()));
+	connect(ui.peopleadd, SIGNAL(clicked()), this, SLOT(AddPeopleView()));
+	connect(ui.peoplesub, SIGNAL(clicked()), this, SLOT(SubPeopleView()));
+	connect(ui.paraadd, SIGNAL(clicked()), this, SLOT(AddPara()));
+	connect(ui.parasub, SIGNAL(clicked()), this, SLOT(SubPara()));
 
 	initPath();
 }
@@ -451,6 +455,24 @@ void AppMain::SubCar()
 	trainview->deleteCar();
 }
 
+void AppMain::AddPara()
+{
+}
+
+void AppMain::SubPara()
+{
+}
+
+void AppMain::AddPeopleView()
+{
+	trainview->behindHuman();
+}
+
+void AppMain::SubPeopleView()
+{
+	trainview->frontHuman();
+}
+
 void AppMain::ChangeCamToWorld()
 {
 	this->trainview->camera = 0;
@@ -517,7 +539,7 @@ void AppMain::UpdateCameraState( int index )
 {
 	ui.aWorld->setChecked( (index==0)?true:false );
 	ui.aTop	 ->setChecked( (index==1)?true:false );
-	ui.aTrain->setChecked((index == 2) ? true : false);
+	ui.aTrain->setChecked( (index==2)?true:false );
 	ui.aHuman->setChecked( (index==3)?true:false );
 }
 
