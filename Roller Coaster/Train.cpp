@@ -1,7 +1,14 @@
 #include "Train.h"
 
-Train::Train(const QString& filePath, int s, Pnt3f p):Model(filePath, s, p), trainSpeed(MAX_TRAIN_SPEED/2.0)
+Train::Train(const QString& filePath, int s, Pnt3f p):Model(filePath, s, p), trainSpeed(MAX_TRAIN_SPEED/2.0),up(0,1,0)
 {
+
+	 
+}
+
+Pnt3f Train::getUp()
+{
+	return Pnt3f(up);
 }
 
 void Train::interpolationLinear(interpolation_t type_interpolation, vector<ControlPoint> points, float stepArcLength, int DIVIDE_LINE)

@@ -20,6 +20,7 @@ QGLWidget(parent)
 	carNum = 3;
 	humanNum = 1;
 	train = new Train("./Models/train.obj", 20, Pnt3f(0, 0, 0));
+	
 	sampleCar = Model("./Models/opencar.obj", 20, Pnt3f(0, 0, 0));
 	sampleHuman = Model("./Models/human.obj", 5, Pnt3f(0, 0, 0));
 	for (size_t i = 0; i < carNum; i++)
@@ -322,14 +323,16 @@ setProjection()
 	else if (this->camera == 2) {
 		//
 		Pnt3f eye = train->getPosition();
-		Pnt3f direction=train->getOrient();
+		Pnt3f direction = train->getOrient();
+		Pnt3f up=train->getUp();
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		gluPerspective(50.0, aspect, 9, 100);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		gluLookAt(eye.x + direction.x*4, eye.y + direction.y * 4, eye.z + direction.z * 4,
-			eye.x+ direction.x * 5, eye.y+ direction.y *5, eye.z+ direction.z * 5,0, 1, 0);
+			eye.x+ direction.x * 5, eye.y+ direction.y *5, eye.z+ direction.z * 5, up.x, up.y, up.z);
+
 		//glLoadIdentity();
 		update();
 	}
@@ -620,33 +623,57 @@ void TrainView::drawTrainObj2(float t, bool doingShadows)
 	if (train->waypoints.size() == 0)return;
 	int index = t * train->waypoints.size();
 	Pnt3f qt = train->waypoints[index];
-	qt.y += 4;
-	Pnt3f orient_t = train->waypoints[index].getOrient(train->waypoints[(index+1)% train->waypoints.size()]);
-	orient_t.normalize();
-	train->rotateTo(orient_t);
+	Pnt3f diff = train->waypoints[index].getOrient(train->waypoints[(index + 1) % train->waypoints.size()]);
+	Pnt3f orient_t = train->wayorients[index];
+	orient_t.normalize(); 
+	Pnt3f cross_t=diff* orient_t;
+	cross_t.normalize();
+	float x = sqrt(pow(orient_t.x, 2) + pow(orient_t.z, 2));
+
+	if (cross_t.x*orient_t.x+ cross_t.z* orient_t.z <= 0)x = -x;
+	float theta = radiansToDegrees(atan2(x,orient_t.y));
+
+	train->rotateDegree = theta;
+	train->rotateTo(diff);
+	qt = qt + 4 * orient_t;
 	train->moveTo(qt);
+
 	if(!doingShadows)
 	glColor3ub(50, 50, 50);
 	train->render(false, false);
 
+	
 	int distance = 10;
 	for (size_t i = 0; i < carNum; i++)
 	{
 		int tempIndex = (index - (i+1) * distance + train->waypoints.size()) % train->waypoints.size();
 		Pnt3f qt = train->waypoints[tempIndex];
-		qt.y += 2;
-		Pnt3f orient_t = train->waypoints[tempIndex].getOrient(train->waypoints[(tempIndex + 1) % train->waypoints.size()]);
+		
+		Pnt3f diff = train->waypoints[tempIndex].getOrient(train->waypoints[(tempIndex + 1) % train->waypoints.size()]);
+		Pnt3f orient_t = train->wayorients[tempIndex];
 		orient_t.normalize();
-		cars[i]->rotateTo(orient_t);
-		cars[i]->moveTo(qt);
+
+		Pnt3f cross_t = diff * orient_t;
+		cross_t.normalize();
+		cross_t += orient_t;
+		float x = sqrt(pow(orient_t.x, 2) + pow(orient_t.z, 2));
+		float theta = radiansToDegrees(atan2(x, orient_t.y));
+		if (cross_t.x * orient_t.x + cross_t.z * orient_t.z <= 0)theta=-theta;
+
+		cars[i]->rotateDegree = theta;
+		cars[i]->rotateTo(diff);
+		cars[i]->moveTo(qt + 2 * orient_t);
+
+
 		if (!doingShadows)
 			glColor3ub(50, 50, 50);
 		cars[i]->render(false, false);
-		qt.y += 3;
+
 		for (size_t j = 0; j < humanNum; j++)
 		{
-			humans[i * humanNum + j]->rotateTo(orient_t);
-			humans[i * humanNum + j]->moveTo(qt+ orient_t*j);
+			humans[i * humanNum + j]->rotateDegree = theta;
+			humans[i * humanNum + j]->rotateTo(diff);
+			humans[i * humanNum + j]->moveTo(qt+ orient_t*5+ diff*j);
 			if (!doingShadows)
 				glColor3ub(254, 225, 185);
 			humans[i * humanNum + j]->render(false, false);

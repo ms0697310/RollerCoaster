@@ -68,6 +68,7 @@ private:
 		void ChangeCamToWorld();
 		void ChangeCamToTop();
 		void ChangeCamToTrain();
+		void ChangeCamToHuman();
 
 		void ChangeCurveType( QString type );
 		void ChangeCurveToLinear();

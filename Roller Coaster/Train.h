@@ -12,7 +12,6 @@ public:
 	//waypoints per frame
 	float MAX_TRAIN_SPEED =1;
 	float trainSpeed;
-
 	vector<Pnt3f> waypoints;
 	vector<Pnt3f> wayorients;
 	typedef enum {
@@ -24,7 +23,8 @@ public:
 		DivideLine,
 		ArcLength
 	} interpolation_t;
-
+	Pnt3f up;
+	Pnt3f getUp();
 	void interpolationLinear(interpolation_t type_interpolation, vector<ControlPoint> points, float stepArcLength=200.0, int DIVIDE_LINE=500);
 	void interpolationCardinalCubic(interpolation_t type_interpolation, vector<ControlPoint> points, float CardinalMatrix[4][4], float stepArcLength = 200.0, int DIVIDE_LINE = 500);
 	void interpolationCubicB_Spline(interpolation_t type_interpolation, vector<ControlPoint> points, float BSplineMatrix[4][4], float stepArcLength = 200.0, int DIVIDE_LINE = 500);

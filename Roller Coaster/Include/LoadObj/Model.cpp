@@ -7,7 +7,7 @@
 #include <QtOpenGL/QtOpenGL>
 #include "Utilities/3dUtils.h"
 Model::Model(const QString &filePath, int s, Pnt3f p)
-	: m_fileName(QFileInfo(filePath).fileName())
+	: m_fileName(QFileInfo(filePath).fileName()), rotateDegree(0)
 {
 	QFile file(filePath);
 	if (!file.open(QIODevice::ReadOnly))
@@ -85,13 +85,13 @@ Model::Model(const QString &filePath, int s, Pnt3f p)
 void Model::render(bool wireframe, bool normals) const
 {
 	glPushMatrix();
+	
 	glTranslatef(pos.x, pos.y, pos.z);
 	float theta1 = -radiansToDegrees(atan2(orient.z, orient.x));
 	glRotatef(theta1, 0, 1, 0);
 	float theta2 = -radiansToDegrees(acos(orient.y));
 	glRotatef(theta2, 0, 0, 1);
-
-
+	glRotatef(rotateDegree, 0,1, 0);
 	glEnable(GL_DEPTH_TEST);
 	glEnableClientState(GL_VERTEX_ARRAY);
 	if (wireframe) {
@@ -125,4 +125,5 @@ void Model::render(bool wireframe, bool normals) const
 	glDisable(GL_DEPTH_TEST);
 	glPopMatrix();
 }
+
 

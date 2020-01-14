@@ -33,6 +33,7 @@ AppMain::AppMain(QWidget *parent)
 	connect( ui.aWorld		,SIGNAL(triggered()),this,SLOT(ChangeCamToWorld())	);
 	connect( ui.aTop		,SIGNAL(triggered()),this,SLOT(ChangeCamToTop())	);
 	connect( ui.aTrain		,SIGNAL(triggered()),this,SLOT(ChangeCamToTrain())	);
+	connect( ui.aHuman      ,SIGNAL(triggered()),this,SLOT(ChangeCamToHuman())  );
 
 	connect( ui.comboCurve	,SIGNAL(currentIndexChanged(QString)),this,SLOT(ChangeCurveType(QString)));
 	connect( ui.aLinear		,SIGNAL(triggered()),this,SLOT(ChangeCurveToLinear())	);
@@ -449,6 +450,11 @@ void AppMain::ChangeCamToTop()
 void AppMain::ChangeCamToTrain()
 {
 	this->trainview->camera = 2;
+}
+
+void AppMain::ChangeCamToHuman()
+{
+	this->trainview->camera = 3;
 }
 
 void AppMain::ChangeCurveToLinear()

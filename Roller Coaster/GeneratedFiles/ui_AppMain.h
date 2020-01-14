@@ -37,7 +37,8 @@ public:
     QAction *aSavePath;
     QAction *aWorld;
     QAction *aTop;
-    QAction *aTrain;
+	QAction *aTrain;
+	QAction *aHuman;
     QAction *aLinear;
     QAction *aCardinal;
     QAction *aCubic;
@@ -132,6 +133,9 @@ public:
         aTrain = new QAction(AppMainClass);
         aTrain->setObjectName(QString::fromUtf8("aTrain"));
         aTrain->setCheckable(true);
+		aHuman = new QAction(AppMainClass);
+		aHuman->setObjectName(QString::fromUtf8("aHuman"));
+		aHuman->setCheckable(true);
         aLinear = new QAction(AppMainClass);
         aLinear->setObjectName(QString::fromUtf8("aLinear"));
         aLinear->setCheckable(false);
