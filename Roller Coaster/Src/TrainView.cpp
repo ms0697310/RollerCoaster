@@ -58,6 +58,9 @@ void TrainView::initializeGL()
 	hill = new Hill();
 	hill->Init();
 
+	bg = new Hill();
+	bg->Init();
+
 	//初始化石頭
 	GLfloat centerX = -30, centerZ = -30, r = 30;
 	for (float deta = 0; deta < 6.28; deta += 6.28 / 20){

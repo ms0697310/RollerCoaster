@@ -18,6 +18,7 @@
 #include "Train.h"
 #include "Hill.h"
 #include "Stone.h"
+#include "BackGround.h"
 #include <iostream>
 #include <vector>
 
@@ -114,6 +115,7 @@ public:
 	Square* square;
 	Wave* wave;
 	Hill* hill;
+	BackGround* bgbg;
 	std::vector<Stone*> stone;
 	GLfloat ProjectionMatrex[16];
 	GLfloat ModelViewMatrex[16];

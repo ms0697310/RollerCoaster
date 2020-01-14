@@ -1,20 +1,19 @@
-#ifndef WAVE_H  
-#define WAVE_H
+#ifndef BACKGROUND_H  
+#define BACKGROUND_H
 #include <Shader.h>
 #include <QString>
-class Wave:public Shader
+#include <vector>
+class BackGround:public Shader
 {
 private:
 	QVector<QVector4D> vertices;
 	QVector<QVector3D> normal;
 	QOpenGLBuffer vertex_vbo;
 	QOpenGLBuffer normal_vbo;
-	GLfloat time;
 	const GLchar* faces[6];
-	GLuint waterCubeID;
+	GLuint cubeID;
 public:
-	Wave();
-	void updateTime(GLfloat time);
+	BackGround();
 	void PaintObject();
 };
 #endif

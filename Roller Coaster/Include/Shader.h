@@ -14,6 +14,7 @@
 #include <QImage>
 #include <QDebug>
 #include <QString>
+
 class Shader
 {
 public:
@@ -37,5 +38,6 @@ public:
 	void Paint(GLfloat* ProjectionMatrix, GLfloat* ModelViewMatrix);
 	void End();
 	virtual void PaintObject();
+	GLuint loadCubemap(const GLchar* faces[6]);
 };
 #endif
