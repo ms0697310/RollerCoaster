@@ -20,6 +20,7 @@ QGLWidget(parent)
 	carNum = 3;
 	humanNum = 1;
 	humanViewIndex = 1;
+	CardinalTao = 0.5;
 	train = new Train("./Models/train.obj", 20, Pnt3f(0, 0, 0));
 	
 	sampleCar = Model("./Models/opencar.obj", 20, Pnt3f(0, 0, 0));
@@ -82,7 +83,7 @@ void TrainView::initializeTexture()
 	QOpenGLTexture* texture = new QOpenGLTexture(QImage("./Textures/Tupi.bmp"));
 	Textures.push_back(texture);
 }
-void TrainView::initSplineMatrix()
+void TrainView::initSplineMatrix(float CardinalScale)
 {
 	float BSplineScale = 1.0 / 6.0;
 	float tempBSplineMatrix[][4] =
@@ -92,7 +93,6 @@ void TrainView::initSplineMatrix()
 		{-3,3,3,1},
 		{1,0,0,0}
 	};
-	float CardinalScale = 0.5;
 	float tempCardinalMatrix[][4]=
 	{
 		{-1,2,-1,0},

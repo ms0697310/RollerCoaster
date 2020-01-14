@@ -457,10 +457,16 @@ void AppMain::SubCar()
 
 void AppMain::AddPara()
 {
+	trainview->CardinalTao += 0.1;
+	trainview->initSplineMatrix(trainview->CardinalTao);
+	trainview->interpolation();
 }
 
 void AppMain::SubPara()
 {
+	trainview->CardinalTao -= 0.1;
+	trainview->initSplineMatrix(trainview->CardinalTao);
+	trainview->interpolation();
 }
 
 void AppMain::AddPeopleView()

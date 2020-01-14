@@ -72,7 +72,7 @@ public:
 
 	void initializeGL();
 	void initializeTexture();
-	void initSplineMatrix();
+	void initSplineMatrix(float CardinalScale = 0.5);
 
 public:
 	ArcBallCam		arcball;			// keep an ArcBall for the UI
@@ -125,6 +125,7 @@ public:
 	int trainLineIndex;
 	unsigned int trainLineILength;
 	float BSplineMatrix[4][4];
+	float CardinalTao;
 	float CardinalMatrix[4][4];
 };  
 #endif // TRAINVIEW_H  
