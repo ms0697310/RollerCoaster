@@ -33,13 +33,11 @@ QGLWidget(parent)
 			humans.push_back(new Human(sampleHuman));
 		}
 	}
-	
-
-
-
 }  
+
 TrainView::~TrainView()  
 {}  
+
 void TrainView::initializeGL()
 {
 	initializeOpenGLFunctions();
@@ -53,13 +51,18 @@ void TrainView::initializeGL()
 	square->Init();
 	//Initialize texture 
 	initializeTexture();
+
 	wave = new Wave();
 	wave->Init();
+
 	hill = new Hill();
 	hill->Init();
 
 	bg = new BackGround();
 	bg->Init();
+
+	tunnel = new Tunnel();
+	tunnel->Init();
 
 	//初始化石頭
 	GLfloat centerX = -30, centerZ = -30, r = 30;
@@ -80,12 +83,14 @@ void TrainView::initializeGL()
 	player->setVolume(50);
 	player->play();
 }
+
 void TrainView::initializeTexture()
 {
 	//Load and create a texture for square;'stexture
 	QOpenGLTexture* texture = new QOpenGLTexture(QImage("./Textures/Tupi.bmp"));
 	Textures.push_back(texture);
 }
+
 void TrainView::initSplineMatrix(float CardinalScale)
 {
 	float BSplineScale = 1.0 / 6.0;
@@ -128,6 +133,7 @@ void TrainView::initSplineMatrix(float CardinalScale)
 		}
 	}
 }
+
 void TrainView:: resetArcball()
 	//========================================================================
 {
@@ -271,6 +277,9 @@ void TrainView::paintGL()
 	//煙火
 	ProcessParticles(t_time);
 	DrawParticles();
+
+	//隧道
+	tunnel->Paint(ProjectionMatrex, ModelViewMatrex);
 
 	//fps計算
 	++frameCount;
