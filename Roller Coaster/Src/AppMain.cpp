@@ -257,7 +257,6 @@ void AppMain::TogglePanel()
 
 void AppMain::ChangeCameraType( QString type )
 {
-	humanViewEnableOrDisable(type == "Human");
 	if( type == "World" )
 	{
 		this->trainview->camera = 0;
@@ -433,7 +432,6 @@ void AppMain::rollz(float dir)
 
 void AppMain::humanViewEnableOrDisable(bool enable)
 {
-	ui.group_human_view->setEnabled(enable);
 }
 
 

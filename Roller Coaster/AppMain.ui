@@ -768,7 +768,7 @@ QPushButton:pressed {
 border-radius: 5px;</string>
         </property>
         <property name="title">
-         <string>People</string>
+         <string>Human Index</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -1798,7 +1798,7 @@ QPushButton:pressed {
       <item>
        <widget class="QGroupBox" name="group_human_view">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="minimumSize">
          <size>
