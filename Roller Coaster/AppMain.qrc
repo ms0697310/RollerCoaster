@@ -1,5 +1,11 @@
 <RCC>
   <qresource prefix="/AppMain">
+    <file>Resources/Icons/down.ico</file>
+    <file>Resources/Icons/left.ico</file>
+    <file>Resources/Icons/right.ico</file>
+    <file>Resources/Icons/turn left.ico</file>
+    <file>Resources/Icons/turn right.ico</file>
+    <file>Resources/Icons/up.ico</file>
     <file>slider_handle.png</file>
     <file>mdelete.png</file>
     <file>madd.png</file>
