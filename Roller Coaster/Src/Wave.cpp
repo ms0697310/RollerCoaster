@@ -2,12 +2,12 @@
 
 Wave::Wave()
 	: Shader("./Shader/Wave.vs", "./Shader/Wave.fs", 2), time(0), faces{
-		"./Textures/lake/right.jpg",
-		"./Textures/lake/left.jpg",
-		"./Textures/lake/top.jpg",
-		"./Textures/lake/bottom.jpg",
-		"./Textures/lake/back.jpg",
-		"./Textures/lake/front.jpg"
+		"./Textures/hill/right.jpg",
+		"./Textures/hill/left.jpg",
+		"./Textures/hill/top.jpg",
+		"./Textures/hill/bottom.jpg",
+		"./Textures/hill/back.jpg",
+		"./Textures/hill/front.jpg"
 	}
 {
 	waterCubeID = loadCubemap(faces);
