@@ -11,6 +11,7 @@ private:
 public:
 	Hill();
 	void PaintObject();
+	void InitVBO();
 	static float ComputePoint(float xx, float zz);
 };
 

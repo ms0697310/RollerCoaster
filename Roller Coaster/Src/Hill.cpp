@@ -7,11 +7,31 @@ Hill::Hill()
 
 void Hill::PaintObject()
 {
+	// 將值傳給GPU
+	vertex_vbo.create();
+	vertex_vbo.bind();
+	vertex_vbo.setUsagePattern(QOpenGLBuffer::StaticDraw);
+	vertex_vbo.allocate(vertices.constData(), vertices.size() * sizeof(QVector4D));
+	shaderProgram->setAttributeArray(0, GL_FLOAT, 0, 4, NULL);
+	vertex_vbo.release();
+
+	normal_vbo.create();
+	normal_vbo.bind();
+	normal_vbo.setUsagePattern(QOpenGLBuffer::StaticDraw);
+	normal_vbo.allocate(normal.constData(), normal.size() * sizeof(QVector3D));
+	shaderProgram->setAttributeArray(1, GL_FLOAT, 0, 3, NULL);
+	normal_vbo.release();
+
+	glDrawArrays(GL_QUADS, 0, vertices.size());
+}
+
+void Hill::InitVBO()
+{
 	// 計算Hill的點的位置與法向量
 	vertices.clear();
 	normal.clear();
-	for (GLfloat xx = -100.0f; xx < 100.0f; xx+=10) {
-		for (GLfloat zz = -100.0f; zz < 100.0f; zz+=10) {
+	for (GLfloat xx = -100.0f; xx < 100.0f; xx += 10) {
+		for (GLfloat zz = -100.0f; zz < 100.0f; zz += 10) {
 			for (int mode = 0; mode < 4; mode++) {
 				GLfloat x = xx + (mode == 0 || mode == 1 ? 0 : 10);
 				GLfloat z = zz + (mode == 0 || mode == 3 ? 0 : 10);
@@ -30,23 +50,6 @@ void Hill::PaintObject()
 			}
 		}
 	}
-
-	// 將值傳給GPU
-	vertex_vbo.create();
-	vertex_vbo.bind();
-	vertex_vbo.setUsagePattern(QOpenGLBuffer::StaticDraw);
-	vertex_vbo.allocate(vertices.constData(), vertices.size() * sizeof(QVector4D));
-	shaderProgram->setAttributeArray(0, GL_FLOAT, 0, 4, NULL);
-	vertex_vbo.release();
-
-	normal_vbo.create();
-	normal_vbo.bind();
-	normal_vbo.setUsagePattern(QOpenGLBuffer::StaticDraw);
-	normal_vbo.allocate(normal.constData(), normal.size() * sizeof(QVector3D));
-	shaderProgram->setAttributeArray(1, GL_FLOAT, 0, 3, NULL);
-	normal_vbo.release();
-
-	glDrawArrays(GL_QUADS, 0, vertices.size());
 }
 
 float Hill::ComputePoint(float xx, float zz)

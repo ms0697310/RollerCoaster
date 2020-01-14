@@ -11,6 +11,7 @@ private:
 	float x, z;
 public:
 	Stone(float x = 0, float z = 0);
+	void InitVBO();
 	void PaintObject();
 };
 

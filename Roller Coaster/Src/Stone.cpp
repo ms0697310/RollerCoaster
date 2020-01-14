@@ -3,9 +3,12 @@
 #define PI 3.141592
 Stone::Stone(float x, float z): Shader("./Shader/Stone.vs", "./Shader/Stone.fs", 2), x(x), z(z)
 {
+}
+void Stone::InitVBO()
+{
 	// 計算stone的點的位置與法向量
-	GLfloat A[] = { 4, 2, 0.4 };
-	GLfloat D[][2] = { {0.05, 0.2}, {0.06, 0.04}, {0.008, 0.008} };
+	GLfloat A[] = { 4, 2, 0.4, 3 };
+	GLfloat D[][2] = { {0.05, 0.2}, {0.06, 0.04}, {0.008, 0.008}, {0.08, -0.08} };
 
 	float R = 5.0f;//球的半徑
 	int statck = 40;//statck：切片----把球體橫向切成幾部分
@@ -32,7 +35,7 @@ Stone::Stone(float x, float z): Shader("./Shader/Stone.vs", "./Shader/Stone.fs",
 			x1 = (float)(r1 * cos(beta)) + x;
 			z1 = -(float)(r1 * sin(beta)) + z;
 			yy0 = 0, yy1 = 0;
-			for (int i = 0; i < 2; i++) {
+			for (int i = 0; i < 4; i++) {
 				yy0 += A[i] * sin(D[i][0] * x0 + D[i][1] * z0);
 				yy1 += A[i] * sin(D[i][0] * x1 + D[i][1] * z1);
 			}
