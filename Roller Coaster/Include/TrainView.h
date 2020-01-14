@@ -54,6 +54,10 @@ public:
 	void interpolation();
 	void insertCar();
 	void deleteCar();
+	//for human view change
+	void preHuman();
+	void postHuman();
+
 	//void drawTrain();
 	// setup the projection - assuming that the projection stack has been
 	// cleared for you
@@ -95,6 +99,7 @@ public:
 	Train* train;
 	int carNum;
 	int humanNum;
+	int humanViewIndex;
 	Model sampleCar;
 	Model sampleHuman;
 	vector<Model*> cars;

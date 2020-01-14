@@ -19,6 +19,7 @@ QGLWidget(parent)
 	frameCount = 0;
 	carNum = 3;
 	humanNum = 1;
+	humanViewIndex = 1;
 	train = new Train("./Models/train.obj", 20, Pnt3f(0, 0, 0));
 	
 	sampleCar = Model("./Models/opencar.obj", 20, Pnt3f(0, 0, 0));
@@ -336,10 +337,11 @@ setProjection()
 	}
 	else if (this->camera == 3) {
 		//
-		Pnt3f up  = humans[0]->getUp();
+		if (humanViewIndex >= humans.size())return;
+		Pnt3f up  = humans[humanViewIndex]->getUp();
 		up.normalize();
-		Pnt3f eye = humans[0]->getPosition()+up*3;
-		Pnt3f direction = humans[0]->getOrient();
+		Pnt3f eye = humans[humanViewIndex]->getPosition()+up*3;
+		Pnt3f direction = humans[humanViewIndex]->getOrient();
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		gluPerspective(50.0, aspect, 3, 100);
@@ -737,6 +739,18 @@ void TrainView::deleteCar()
 	carNum--;
 	cars.erase(cars.begin() + cars.size() - 1);
 	humans.erase(humans.begin() + humans.size() - 1);
+	if (humanViewIndex == humans.size()) frontHuman();
+}
+void TrainView::frontHuman()
+{
+	humanViewIndex--;
+	if (humanViewIndex < 0)humanViewIndex = 0;
+}
+void TrainView::behindHuman()
+{
+	humanViewIndex++;
+	if (humanViewIndex >= humans.size())humanViewIndex = humans.size()-1;
+	if (humanViewIndex < 0)humanViewIndex = 0;
 }
 void TrainView::drawTrain(float t)
 {
