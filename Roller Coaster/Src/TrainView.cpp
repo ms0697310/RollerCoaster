@@ -23,13 +23,13 @@ QGLWidget(parent)
 	train = new Train("./Models/train.obj", 20, Pnt3f(0, 0, 0));
 	
 	sampleCar = Model("./Models/opencar.obj", 20, Pnt3f(0, 0, 0));
-	sampleHuman = Model("./Models/human.obj", 5, Pnt3f(0, 0, 0));
+	sampleHuman = Human("./Models/human.obj", 5, Pnt3f(0, 0, 0));
 	for (size_t i = 0; i < carNum; i++)
 	{
 		cars.push_back(new Model(sampleCar));
 		for (size_t j = 0; j < humanNum; j++)
 		{
-			humans.push_back(new Model(sampleHuman));
+			humans.push_back(new Human(sampleHuman));
 		}
 	}
 	
@@ -340,15 +340,15 @@ setProjection()
 		if (humanViewIndex >= humans.size())return;
 		Pnt3f up  = humans[humanViewIndex]->getUp();
 		up.normalize();
-		Pnt3f eye = humans[humanViewIndex]->getPosition()+up*3;
 		Pnt3f direction = humans[humanViewIndex]->getOrient();
+		Pnt3f eye = humans[humanViewIndex]->getPosition() + up * 3 + direction * 2;
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		gluPerspective(50.0, aspect, 3, 100);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		gluLookAt(eye.x + direction.x * 2, eye.y + direction.y * 2, eye.z + direction.z * 2,
-			eye.x + direction.x * 3, eye.y + direction.y *3, eye.z + direction.z * 3, up.x, up.y, up.z);
+		gluLookAt(eye.x , eye.y , eye.z ,
+			eye.x + direction.x , eye.y + direction.y , eye.z + direction.z , up.x, up.y, up.z);
 
 		//glLoadIdentity();
 		update();
@@ -731,7 +731,7 @@ void TrainView::insertCar()
 {
 	carNum++;
 	cars.push_back(new Model(sampleCar));
-	humans.push_back(new Model(sampleHuman));
+	humans.push_back(new Human(sampleHuman));
 }
 void TrainView::deleteCar()
 {

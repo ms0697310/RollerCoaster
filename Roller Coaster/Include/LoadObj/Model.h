@@ -36,7 +36,8 @@ private:
 	QVector<int> m_pointIndices;
 	Pnt3f pos;
 	Pnt3f orient;
-
+protected:
+	Pnt3f displace;
 };
 
 #endif

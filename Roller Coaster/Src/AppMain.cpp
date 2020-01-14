@@ -144,6 +144,15 @@ bool AppMain::eventFilter(QObject *watched, QEvent *e) {
 		// Set up the mode
 		if (event->key() == Qt::Key_Alt) 
 			this->canpan = true;
+		//if (this->trainview->camera == 3 && 
+		if(	this->trainview->humanViewIndex < this->trainview->humans.size())
+		{
+			int index = this->trainview->humanViewIndex;
+			if (event->key() == Qt::Key_W) this->trainview->humans[index]->goForward();
+			if (event->key() == Qt::Key_A) this->trainview->humans[index]->goLeft();
+			if (event->key() == Qt::Key_S) this->trainview->humans[index]->goBackward();
+			if (event->key() == Qt::Key_D) this->trainview->humans[index]->goRight();
+		}
 	}
 
 	return QWidget::eventFilter(watched, e);

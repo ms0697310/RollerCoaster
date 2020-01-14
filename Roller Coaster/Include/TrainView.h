@@ -11,6 +11,7 @@
 #include "Utilities/ArcBallCam.H"
 #include "Utilities/3DUtils.H"
 #include "Track.H"
+#include "Human.h"
 #include "Triangle.h"
 #include "Square.h"
 #include "Wave.h"
@@ -101,9 +102,9 @@ public:
 	int humanNum;
 	int humanViewIndex;
 	Model sampleCar;
-	Model sampleHuman;
+	Human sampleHuman;
 	vector<Model*> cars;
-	vector<Model*> humans;
+	vector<Human*> humans;
 	QMediaPlayer* player;
 	int camera;
 	int curve;
