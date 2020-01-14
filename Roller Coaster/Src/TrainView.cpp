@@ -344,7 +344,7 @@ setProjection()
 		Pnt3f up  = humans[humanViewIndex]->getUp();
 		up.normalize();
 		Pnt3f direction = humans[humanViewIndex]->getOrient();
-		Pnt3f eye = humans[humanViewIndex]->getPosition() + up * 3 + direction * 2;
+		Pnt3f eye = humans[humanViewIndex]->getPosition() + up * 3 + direction * (2);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		gluPerspective(50.0, aspect, 3, 100);
@@ -693,10 +693,13 @@ void TrainView::drawTrainObj2(float t, bool doingShadows)
 
 		for (size_t j = 0; j < humanNum; j++)
 		{
+			Pnt3f displace = humans[i * humanNum + j]->getDisplace();
+			Pnt3f right = diff * orient_t;
+			right.normalize();
 			humans[i * humanNum + j]->up = orient_t;
 			humans[i * humanNum + j]->rotateDegree = theta;
 			humans[i * humanNum + j]->rotateTo(diff);
-			humans[i * humanNum + j]->moveTo(qt+ orient_t*5+ diff*j);
+			humans[i * humanNum + j]->moveTo(qt+ orient_t*5+ diff* (j+ displace.x)+ right * displace.z);
 			if (!doingShadows)
 				glColor3ub(254, 225, 185);
 			humans[i * humanNum + j]->render(false, false);

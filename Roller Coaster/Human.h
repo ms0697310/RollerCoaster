@@ -10,6 +10,7 @@ public:
 	void goBackward();
 	void goLeft();
 	void goRight();
-	void checkDistance();
+	void checkDisplace();
+	Pnt3f getDisplace() { return Pnt3f(displace); };
 };
 

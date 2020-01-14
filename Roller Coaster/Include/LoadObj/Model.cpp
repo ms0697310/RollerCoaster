@@ -85,7 +85,6 @@ Model::Model(const QString &filePath, int s, Pnt3f p)
 void Model::render(bool wireframe, bool normals) const
 {
 	glPushMatrix();
-	glTranslatef(displace.x, displace.y, displace.z);
 	glTranslatef(pos.x, pos.y, pos.z);
 	float theta1 = -radiansToDegrees(atan2(orient.z, orient.x));
 	glRotatef(theta1, 0, 1, 0);

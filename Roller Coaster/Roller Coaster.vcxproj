@@ -232,12 +232,12 @@
     <ClInclude Include="Include\Particle.h" />
     <ClInclude Include="Include\Shader.h" />
     <ClInclude Include="Include\Square.h" />
+    <ClInclude Include="Include\stb_image.h" />
     <ClInclude Include="Include\Stone.h" />
     <ClInclude Include="Include\Track.H" />
     <ClInclude Include="Include\vector.h" />
     <ClInclude Include="Include\Wave.h" />
     <ClInclude Include="Train.h" />
-    <ClInclude Include="stb_image.h" />
     <CustomBuild Include="Include\TrainView.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
