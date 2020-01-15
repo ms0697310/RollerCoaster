@@ -27,7 +27,7 @@ void Tunnel::PaintObject()
 
 void Tunnel::InitVBO()
 {
-	GLfloat weight = 8, length = 30, height = 6, arcHeight = 3;
+	GLfloat weight = 15, length = 30, height = 12, arcHeight = 6;
 	GLfloat basicX = -50, basicY = -1, basicZ = 50;
 	GLfloat detaRange = 3.14 / weight;
 	//©³

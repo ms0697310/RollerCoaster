@@ -180,25 +180,26 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="Human.cpp" />
     <ClCompile Include="Include\LoadObj\Model.cpp" />
     <ClCompile Include="Src\AppMain.cpp" />
     <ClCompile Include="Src\Background.cpp" />
     <ClCompile Include="Src\ControlPoint.cpp" />
     <ClCompile Include="Src\Hill.cpp" />
+    <ClCompile Include="Src\Human.cpp" />
     <ClCompile Include="Src\main.cpp" />
     <ClCompile Include="Src\Shader.cpp" />
     <ClCompile Include="Src\Square.cpp" />
     <ClCompile Include="Src\Stone.cpp" />
     <ClCompile Include="Src\Track.cpp" />
+    <ClCompile Include="Src\Train.cpp" />
     <ClCompile Include="Src\TrainView.cpp" />
     <ClCompile Include="Src\Triangle.cpp" />
+    <ClCompile Include="Src\Tunnel.cpp" />
     <ClCompile Include="Src\Utilities\3DUtils.cpp" />
     <ClCompile Include="Src\Utilities\ArcBallCam.cpp" />
     <ClCompile Include="Src\Utilities\Pnt3f.cpp" />
     <ClCompile Include="Src\vector.cpp" />
     <ClCompile Include="Src\Wave.cpp" />
-    <ClCompile Include="Train.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="AppMain.ui">
@@ -224,10 +225,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_AppMain.h" />
-    <ClInclude Include="Human.h" />
     <ClInclude Include="Include\Background.h" />
     <ClInclude Include="Include\ControlPoint.H" />
     <ClInclude Include="Include\Hill.h" />
+    <ClInclude Include="Include\Human.h" />
     <ClInclude Include="Include\LoadObj\Model.h" />
     <ClInclude Include="Include\Particle.h" />
     <ClInclude Include="Include\Shader.h" />
@@ -235,9 +236,10 @@
     <ClInclude Include="Include\stb_image.h" />
     <ClInclude Include="Include\Stone.h" />
     <ClInclude Include="Include\Track.H" />
+    <ClInclude Include="Include\Train.h" />
+    <ClInclude Include="Include\Tunnel.h" />
     <ClInclude Include="Include\vector.h" />
     <ClInclude Include="Include\Wave.h" />
-    <ClInclude Include="Train.h" />
     <CustomBuild Include="Include\TrainView.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>

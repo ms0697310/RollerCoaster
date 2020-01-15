@@ -54,6 +54,7 @@ public:
 	void drawTrainObj(float);
 	void drawTrainObj2(float, bool doingShadows);
 	void drawStone();
+	void drawBuilding(bool doingShadows);
 	void interpolation();
 	void insertCar();
 	void deleteCar();
@@ -103,6 +104,7 @@ public:
 	int carNum;
 	int humanNum;
 	int humanViewIndex;
+	vector<Model*> buildings;
 	Model sampleCar;
 	Human sampleHuman;
 	vector<Model*> cars;

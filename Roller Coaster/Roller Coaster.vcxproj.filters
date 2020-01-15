@@ -110,19 +110,10 @@
     <ClCompile Include="Src\Background.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Background.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Human.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Train.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\3DSLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\CBMPLoader.cpp">
+    <ClCompile Include="Src\Human.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\Tunnel.cpp">
@@ -187,9 +178,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\Stone.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Background.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\Background.h">

@@ -33,6 +33,12 @@ QGLWidget(parent)
 			humans.push_back(new Human(sampleHuman));
 		}
 	}
+	buildings.push_back(new Model("./Models/247_House 15_obj.obj", 20, Pnt3f(-55, 5, 10)));
+	buildings[0]->rotateTo(Pnt3f(0, 1, 0));
+	buildings.push_back(new Model("./Models/3d we.obj", 10, Pnt3f(14, 16, 27)));
+	buildings[1]->rotateTo(Pnt3f(0, 1, 0));
+	buildings.push_back(new Model("./Models/Old House 2 3D Models.obj", 20, Pnt3f(30, 20, 15)));
+	buildings[2]->rotateTo(Pnt3f(0, 1, 0.2));
 }  
 
 TrainView::~TrainView()  
@@ -339,16 +345,17 @@ setProjection()
 	//####################################################################
 	else if (this->camera == 2) {
 		//
-		Pnt3f eye = train->getPosition();
 		Pnt3f direction = train->getOrient();
+		direction.normalize();
+		Pnt3f eye = train->getPosition() + direction * 1;
 		Pnt3f up=train->getUp();
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		gluPerspective(50.0, aspect, 7, 100);
+		gluPerspective(50.0, aspect, 0.1, 512);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		gluLookAt(eye.x + direction.x*4, eye.y + direction.y * 4, eye.z + direction.z * 4,
-			eye.x+ direction.x * 5, eye.y+ direction.y *5, eye.z+ direction.z * 5, up.x, up.y, up.z);
+		gluLookAt(eye.x , eye.y , eye.z ,
+			eye.x+ direction.x , eye.y+ direction.y , eye.z+ direction.z , up.x, up.y, up.z);
 		update();
 	}
 	else if (this->camera == 3) {
@@ -357,10 +364,11 @@ setProjection()
 		Pnt3f up  = humans[humanViewIndex]->getUp();
 		up.normalize();
 		Pnt3f direction = humans[humanViewIndex]->getOrient();
-		Pnt3f eye = humans[humanViewIndex]->getPosition() + up * 3 + direction * (2);
+		direction.normalize();
+		Pnt3f eye = humans[humanViewIndex]->getPosition() + up * 3 + direction * (3);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		gluPerspective(50.0, aspect, 3, 100);
+		gluPerspective(50.0, aspect, 0.1, 512);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		gluLookAt(eye.x , eye.y , eye.z ,
@@ -430,6 +438,7 @@ void TrainView::drawStuff(bool doingShadows)
 	if (!tw->trainCam->value())
 		drawTrain(this, doingShadows);
 #endif
+	drawBuilding(doingShadows);
 }
 
 void TrainView::drawTrack(bool doingShadows)
@@ -675,6 +684,7 @@ void TrainView::drawTrainObj2(float t, bool doingShadows)
 
 	if(!doingShadows)
 	glColor3ub(50, 50, 50);
+	if(camera!=2)
 	train->render(false, false);
 
 	
@@ -715,6 +725,7 @@ void TrainView::drawTrainObj2(float t, bool doingShadows)
 			humans[i * humanNum + j]->moveTo(qt+ orient_t*5+ diff* (j+ displace.x)+ right * displace.z);
 			if (!doingShadows)
 				glColor3ub(254, 225, 185);
+			if(!(camera==3&& i * humanNum + j==humanViewIndex))
 			humans[i * humanNum + j]->render(false, false);
 		}
 	}
@@ -724,6 +735,23 @@ void TrainView::drawStone() {
 	for (auto iter = stone.begin(); iter < stone.end(); iter++) {
 		(*iter)->Paint(ProjectionMatrex, ModelViewMatrex);
 	}
+}
+
+void TrainView::drawBuilding(bool doingShadows)
+{
+
+		if (!doingShadows) {
+			glColor3ub(140, 95, 40);
+		}
+		buildings[0]->render(false, false);
+		if (!doingShadows) {
+			glColor3ub(139, 139, 122);
+		}
+		buildings[1]->render(false, false);
+		if (!doingShadows) {
+			glColor3ub(79, 34, 1);
+		}
+		buildings[2]->render(false, false);
 }
 
 void TrainView::interpolation()
