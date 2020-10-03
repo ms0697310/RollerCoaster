@@ -47,14 +47,20 @@ public:
 	bool canpan;
 	bool isHover;
 
+	void initPath();
+
 private:
 	void UpdateCameraState( int index );
 	void UpdateCurveState( int index );
 	void UpdateTrackState( int index );
 	void UpdateVelocityState( int index );
 	void rollx( float dir );
+	void movey(float height);
 	void rollz( float dir );
 	Ui::AppMainClass ui;
+
+private:
+	void humanViewEnableOrDisable(bool);
 
 	private slots:
 		void LoadTrackPath();
@@ -65,6 +71,7 @@ private:
 		void ChangeCamToWorld();
 		void ChangeCamToTop();
 		void ChangeCamToTrain();
+		void ChangeCamToHuman();
 
 		void ChangeCurveType( QString type );
 		void ChangeCurveToLinear();
@@ -86,6 +93,24 @@ private:
 		void RotateControlPointSubX();
 		void RotateControlPointAddZ();
 		void RotateControlPointSubZ();
+		void MoveControlPointAddY();
+		void MoveControlPointSubY();
+
+		void AddCar();
+		void SubCar();
+
+		void AddPara();
+		void SubPara();
+
+		void AddPeopleView();
+		void SubPeopleView();
+
+		void MoveHumanViewUp();
+		void MoveHumanViewDown();
+		void MoveHumanViewLeft();
+		void MoveHumanViewRight();
+		void RotateHumanViewLeft();
+		void RotateHumanViewRight();
 
 protected:
 	bool eventFilter(QObject *watched, QEvent *e); 

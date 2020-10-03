@@ -64,7 +64,7 @@ Pnt3f(const float _x, const float _y, const float _z) : x(_x), y(_y), z(_z)
 //
 // *
 //=============================================================================
-void Pnt3f::
+Pnt3f Pnt3f::
 normalize()
 //=============================================================================
 {
@@ -80,4 +80,17 @@ normalize()
 		y /= l;
 		z /= l;
 	}
+	return Pnt3f(x, y, z);
+}
+
+Pnt3f Pnt3f::getOrient(const Pnt3f& p) const
+{
+	Pnt3f temp = (p - *this);
+
+	return Pnt3f(temp.normalize());
+}
+
+float Pnt3f::length() const
+{
+	return sqrt(x*x+y*y+z*z);
 }

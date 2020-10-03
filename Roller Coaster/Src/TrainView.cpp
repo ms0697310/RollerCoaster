@@ -1,5 +1,9 @@
 #include "TrainView.h"  
-
+#include "AppMain.h"
+#include <QtMultimedia/QMediaPlaylist>
+#include "Particle.h"
+#include<QDebug>
+#include<string>
 TrainView::TrainView(QWidget *parent) :  
 QGLWidget(parent)  
 {  
@@ -7,9 +11,39 @@ QGLWidget(parent)
 	DIVIDE_LINE = 500;
 	BOARD_LENGTH = 3;
 	BOARD_DISTANCE_LENGTH = 3;
+	trainLineIndex = 0;
+	trainLineILength = 0;
+	t_time = 0;
+	type_interpolation = ArcLength;
+	initSplineMatrix();
+	frameCount = 0;
+	carNum = 3;
+	humanNum = 1;
+	humanViewIndex = 1;
+	CardinalTao = 0.5;
+	train = new Train("./Models/train.obj", 20, Pnt3f(0, 0, 0));
+	
+	sampleCar = Model("./Models/opencar.obj", 20, Pnt3f(0, 0, 0));
+	sampleHuman = Human("./Models/human.obj", 5, Pnt3f(0, 0, 0));
+	for (size_t i = 0; i < carNum; i++)
+	{
+		cars.push_back(new Model(sampleCar));
+		for (size_t j = 0; j < humanNum; j++)
+		{
+			humans.push_back(new Human(sampleHuman));
+		}
+	}
+	buildings.push_back(new Model("./Models/247_House 15_obj.obj", 20, Pnt3f(-55, 5, 10)));
+	buildings[0]->rotateTo(Pnt3f(0, 1, 0));
+	buildings.push_back(new Model("./Models/3d we.obj", 10, Pnt3f(14, 16, 27)));
+	buildings[1]->rotateTo(Pnt3f(0, 1, 0));
+	buildings.push_back(new Model("./Models/Old House 2 3D Models.obj", 20, Pnt3f(30, 20, 15)));
+	buildings[2]->rotateTo(Pnt3f(0, 1, 0.2));
 }  
+
 TrainView::~TrainView()  
 {}  
+
 void TrainView::initializeGL()
 {
 	initializeOpenGLFunctions();
@@ -23,14 +57,89 @@ void TrainView::initializeGL()
 	square->Init();
 	//Initialize texture 
 	initializeTexture();
-	
+
+	wave = new Wave();
+	wave->Init();
+
+	hill = new Hill();
+	hill->Init();
+
+	bg = new BackGround();
+	bg->Init();
+
+	tunnel = new Tunnel();
+	tunnel->Init();
+
+	//åˆå§‹åŒ–çŸ³é ­
+	GLfloat centerX = -30, centerZ = -30, r = 30;
+	for (float deta = 0; deta < 6.28; deta += 6.28 / 20){
+		GLfloat x = r * cos(deta), z = r * sin(deta);
+		Stone* newStone = new Stone(x + centerX, z + centerZ);
+		newStone->Init();
+		stone.push_back(newStone);
+	}
+	frameTime.start();
+	QMediaPlaylist* playlist = new QMediaPlaylist();
+	playlist->addMedia(QUrl("./Music/bgm.mp3"));
+	playlist->setPlaybackMode(QMediaPlaylist::Loop);
+
+	player = new QMediaPlayer;
+	//player->setMedia(QUrl(QUrl::fromLocalFile("./Music/bgm.mp3")));
+	player->setPlaylist(playlist);
+	player->setVolume(50);
+	player->play();
 }
+
 void TrainView::initializeTexture()
 {
 	//Load and create a texture for square;'stexture
 	QOpenGLTexture* texture = new QOpenGLTexture(QImage("./Textures/Tupi.bmp"));
 	Textures.push_back(texture);
 }
+
+void TrainView::initSplineMatrix(float CardinalScale)
+{
+	float BSplineScale = 1.0 / 6.0;
+	float tempBSplineMatrix[][4] =
+	{
+		{-1,3,-3,1},
+		{3,-6,0,4},
+		{-3,3,3,1},
+		{1,0,0,0}
+	};
+	float tempCardinalMatrix[][4]=
+	{
+		{-1,2,-1,0},
+		{-1,1,0,0},
+		{1,-2,1,0},
+		{1,-1,0,0}
+	};
+	for (size_t i = 0; i < 4; i++)
+	{
+		for (size_t j = 0; j < 4; j++)
+		{
+			CardinalMatrix[i][j] = tempCardinalMatrix[i][j];
+			BSplineMatrix[i][j] = tempBSplineMatrix[i][j];
+		}
+	}
+	float CardinalMatrix2[][4] =
+	{
+		{0,0,0,0},
+		{2,-3,0,1},
+		{-2,3,0,0},
+		{0,0,0,0}
+	};
+	for (size_t i = 0; i < 4; i++)
+	{
+		for (size_t j = 0; j < 4; j++)
+		{
+			BSplineMatrix[i][j] *= BSplineScale;
+			CardinalMatrix[i][j] *= CardinalScale;
+			CardinalMatrix[i][j] += CardinalMatrix2[i][j];
+		}
+	}
+}
+
 void TrainView:: resetArcball()
 	//========================================================================
 {
@@ -110,15 +219,19 @@ void TrainView::paintGL()
 	glLightfv(GL_LIGHT2, GL_POSITION, lightPosition3);
 	glLightfv(GL_LIGHT2, GL_DIFFUSE, blueLight);
 
-
+	//draw background
+	bg->Begin(ProjectionMatrex, ModelViewMatrex);
+		glActiveTexture(GL_TEXTURE0);
+		bg->PaintObject();
+	bg->End();
 
 	//*********************************************************************
 	// now draw the ground plane
 	//*********************************************************************
-	setupFloor();
-	glDisable(GL_LIGHTING);
-	drawFloor(200,10);
-
+	// setupFloor();
+	// glDisable(GL_LIGHTING);
+	// drawFloor(200,10);
+	hill->Paint(ProjectionMatrex, ModelViewMatrex);
 
 	//*********************************************************************
 	// now draw the object and we need to do it twice
@@ -142,19 +255,49 @@ void TrainView::paintGL()
  	glGetFloatv(GL_PROJECTION_MATRIX,ProjectionMatrex);
 
 	//Call triangle's render function, pass ModelViewMatrex and ProjectionMatrex
- 	triangle->Paint(ProjectionMatrex,ModelViewMatrex);
+ 	//triangle->Paint(ProjectionMatrex,ModelViewMatrex);
     
 	//we manage textures by Trainview class, so we modify square's render function
-	square->Begin();
-		//Active Texture
+	//square->Begin();
+	//	//Active Texture
+	//	glActiveTexture(GL_TEXTURE0);
+	//	//Bind square's texture
+	//	Textures[0]->bind();
+	//	//pass texture to shader
+	//	square->shaderProgram->setUniformValue("Texture",0);
+	//	//Call square's render function, pass ModelViewMatrex and ProjectionMatrex
+	//	square->Paint(ProjectionMatrex,ModelViewMatrex);
+	//square->End();
+
+	//æ°´é¢
+	wave->updateTime(t_time);
+
+	wave->Begin(ProjectionMatrex, ModelViewMatrex);
 		glActiveTexture(GL_TEXTURE0);
-		//Bind square's texture
-		Textures[0]->bind();
-		//pass texture to shader
-		square->shaderProgram->setUniformValue("Texture",0);
-		//Call square's render function, pass ModelViewMatrex and ProjectionMatrex
-		square->Paint(ProjectionMatrex,ModelViewMatrex);
-	square->End();
+		wave->PaintObject();
+	wave->End();
+
+	//çŸ³é ­
+	drawStone();
+
+	//ç…™ç«
+	ProcessParticles(t_time);
+	DrawParticles();
+
+	//éš§é“
+	tunnel->Paint(ProjectionMatrex, ModelViewMatrex);
+
+	//fpsè¨ˆç®—
+	++frameCount;
+	if (frameTime.elapsed() >= 1000)
+	{
+
+		double fps = frameCount / ((double)frameTime.elapsed() / 1000.0);
+		
+		qInfo("FPS: %s",std::to_string(fps).c_str());
+		frameTime.restart();
+		frameCount = 0;
+	}
 }
 
 //************************************************************************
@@ -200,6 +343,40 @@ setProjection()
 	// TODO: 
 	// put code for train view projection here!	
 	//####################################################################
+	else if (this->camera == 2) {
+		//
+		Pnt3f direction = train->getOrient();
+		direction.normalize();
+		Pnt3f eye = train->getPosition() + direction * 1;
+		Pnt3f up=train->getUp();
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		gluPerspective(50.0, aspect, 0.1, 512);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		gluLookAt(eye.x , eye.y , eye.z ,
+			eye.x+ direction.x , eye.y+ direction.y , eye.z+ direction.z , up.x, up.y, up.z);
+		update();
+	}
+	else if (this->camera == 3) {
+		//
+		if (humanViewIndex >= humans.size())return;
+		Pnt3f up  = humans[humanViewIndex]->getUp();
+		up.normalize();
+		Pnt3f direction = humans[humanViewIndex]->getOrient();
+		direction.normalize();
+		Pnt3f eye = humans[humanViewIndex]->getPosition() + up * 3 + direction * (3);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		gluPerspective(50.0, aspect, 0.1, 512);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		gluLookAt(eye.x , eye.y , eye.z ,
+			eye.x + direction.x , eye.y + direction.y , eye.z + direction.z , up.x, up.y, up.z);
+
+		//glLoadIdentity();
+		update();
+	}
 	else {
 #ifdef EXAMPLE_SOLUTION
 		trainCamView(this,aspect);
@@ -207,6 +384,7 @@ setProjection()
 		update();
 	}
 }
+
 
 //************************************************************************
 //
@@ -252,50 +430,24 @@ void TrainView::drawStuff(bool doingShadows)
 	// TODO: 
 	//	call your own train drawing code
 	//####################################################################
+	if (isrun) AppMain::getInstance()->advanceTrain();
+	//drawTrain(t_time);
+	drawTrainObj2(t_time, doingShadows);
 #ifdef EXAMPLE_SOLUTION
 	// don't draw the train if you're looking out the front window
 	if (!tw->trainCam->value())
 		drawTrain(this, doingShadows);
 #endif
+	drawBuilding(doingShadows);
 }
 
 void TrainView::drawTrack(bool doingShadows)
 {
-	float BSplineScale = 1.0 / 6.0;
-	float BSplineMatrix[][4] =
-	{
-		{-1,3,-3,1},
-		{3,-6,0,4},
-		{-3,3,3,1},
-		{1,0,0,0}
-	};
-	float CardinalScale = 0.5;
-	float CardinalMatrix[][4] =
-	{
-		{-1,2,-1,0},
-		{-1,1,0,0},
-		{1,-2,1,0},
-		{1,-1,0,0}
-	};
-	float CardinalMatrix2[][4] =
-	{
-		{0,0,0,0},
-		{2,-3,0,1},
-		{-2,3,0,0},
-		{0,0,0,0}
-	};
-	for (size_t i = 0; i < 4; i++)
-	{
-		for (size_t j = 0; j < 4; j++)
-		{
-			BSplineMatrix[i][j]  *= BSplineScale;
-			CardinalMatrix[i][j] *= CardinalScale;
-			CardinalMatrix[i][j] += CardinalMatrix2[i][j];
-		}
-	}
 
-	spline_t type_spline = (spline_t)curve;
-	Pnt3f qt0, qt00, qt01, qt, board0, board1;
+
+	type_spline = (spline_t)curve;
+	Pnt3f qt0, qt00, qt01, board0, board1;
+	Pnt3f qt, orient_t;
 	bool started = false;
 	float boardLen = 0;
 	const bool BOARD_MODE = true, TRACK_MODE = false;
@@ -312,15 +464,15 @@ void TrainView::drawTrack(bool doingShadows)
 		Pnt3f cp_orient_p1 = m_pTrack->points[i].orient;
 		Pnt3f cp_orient_p2 = m_pTrack->points[(i + 1) % m_pTrack->points.size()].orient;
 		Pnt3f cp_orient_p3 = m_pTrack->points[(i + 2) % m_pTrack->points.size()].orient;
-		// ·L½Õ¨¤«× ¨¾¤î180«×Â½Âà°İÃD
+		// ï¿½Lï¿½Õ¨ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½180ï¿½ï¿½Â½ï¿½ï¿½ï¿½ï¿½D
 		
 		cp_orient_p1.normalize();
 		cp_orient_p2.normalize();
 		if (cp_orient_p2 == -cp_orient_p1)
 		{
 			
-			//­YÂI¦ì¸m±×²v»P·L½Õªº¨¤«×¬Û¦P¡A«h®ÄªG¤£¨Î¡C
-			//¬G°µ¤F±×²v§PÂ_¥H¤Î¤£¦Pªº¨¤«×·L½Õ¡C
+			//ï¿½Yï¿½Iï¿½ï¿½mï¿½×²vï¿½Pï¿½Lï¿½Õªï¿½ï¿½ï¿½ï¿½×¬Û¦Pï¿½Aï¿½hï¿½ÄªGï¿½ï¿½ï¿½Î¡C
+			//ï¿½Gï¿½ï¿½ï¿½Fï¿½×²vï¿½Pï¿½_ï¿½Hï¿½Î¤ï¿½ï¿½Pï¿½ï¿½ï¿½ï¿½ï¿½×·Lï¿½Õ¡C
 			
 			Pnt3f temp = cp_pos_p2 - cp_pos_p1;
 			temp.normalize();
@@ -331,11 +483,10 @@ void TrainView::drawTrack(bool doingShadows)
 		}
 		cp_orient_p1.normalize();
 		cp_orient_p2.normalize();
-		// ·L½Õ¨¤«×END
+		// ï¿½Lï¿½Õ¨ï¿½ï¿½ï¿½END
 		float percent = 1.0f / DIVIDE_LINE;
 		float t = 0;
-		Pnt3f orient_t;
-		if (!started) qt00 = qt01 = qt = qt;
+		if (!started) qt00 = qt01 = qt;
 		for (size_t j = 0; j < DIVIDE_LINE; j++) {
 			qt0 = qt;
 			t += percent; 
@@ -399,7 +550,7 @@ void TrainView::drawTrack(bool doingShadows)
 				float len = sqrt((diff.x * diff.x) + (diff.y * diff.y) + (diff.z * diff.z));
 				boardLen += len;
 
-				// ­y¹D
+				// ï¿½yï¿½D
 				glLineWidth(4);
 				glBegin(GL_LINES);
 				if (!doingShadows) {
@@ -414,7 +565,7 @@ void TrainView::drawTrack(bool doingShadows)
 				
 				glEnd();
 
-				// ¤ì±ø
+				// ï¿½ï¿½ï¿½
 				Pnt3f cross_b = diff * orient_t;
 				cross_b.normalize();
 				cross_b = cross_b * 3.5f;
@@ -452,12 +603,233 @@ void TrainView::drawTrack(bool doingShadows)
 			started = true;
 			qt00 = qt1 + cross_t;
 			qt01 = qt1 - cross_t;
-			
 		}
 
 
-
 	}
+}
+void TrainView::drawTrainObj(float t)
+{
+	t *= m_pTrack->points.size();
+	size_t i = t;
+	t -= i;
+	Pnt3f cp_pos_p0 = m_pTrack->points[(i - 1 + m_pTrack->points.size()) % m_pTrack->points.size()].pos;
+	Pnt3f cp_pos_p1 = m_pTrack->points[i].pos;
+	Pnt3f cp_pos_p2 = m_pTrack->points[(i + 1) % m_pTrack->points.size()].pos;
+	Pnt3f cp_pos_p3 = m_pTrack->points[(i + 2) % m_pTrack->points.size()].pos;
+	Pnt3f qt, orient_t;
+
+	float tMatrix[][1] =
+	{
+		{t * t * t},
+		{t * t},
+		{t},
+		{1}
+	};
+	float MTMatrix[4][1] = { {0},{0},{0},{0} };
+	for (size_t i = 0; i < 4; i++)
+	{
+		for (size_t j = 0; j < 4; j++)
+		{
+			if (type_spline == spline_CardinalCubic)
+				MTMatrix[i][0] += CardinalMatrix[i][j] * tMatrix[j][0];
+			else if (type_spline == spline_CubicB_Spline)
+				MTMatrix[i][0] += BSplineMatrix[i][j] * tMatrix[j][0];
+		}
+	}
+
+
+	switch (type_spline) {
+	case spline_Linear:
+		// Linear
+		qt = (1 - t) * cp_pos_p1 + t * cp_pos_p2;
+		break;
+	case spline_CardinalCubic:
+	case spline_CubicB_Spline:
+		qt = MTMatrix[0][0] * cp_pos_p0 +
+			MTMatrix[1][0] * cp_pos_p1 +
+			MTMatrix[2][0] * cp_pos_p2 +
+			MTMatrix[3][0] * cp_pos_p3;
+		break;
+	}
+
+	orient_t = train->getPosition().getOrient(qt);
+	train->rotateTo(orient_t);
+	train->moveTo(qt);
+	glColor3ub(255, 255, 255);
+	train->render(false, false);
+
+}
+void TrainView::drawTrainObj2(float t, bool doingShadows)
+{
+	if (train->waypoints.size() == 0)return;
+	int index = t * train->waypoints.size();
+	Pnt3f qt = train->waypoints[index];
+	Pnt3f diff = train->waypoints[index].getOrient(train->waypoints[(index + 1) % train->waypoints.size()]);
+	Pnt3f orient_t = train->wayorients[index];
+	orient_t.normalize(); 
+	train->up = orient_t;
+
+	Pnt3f cross_t = diff * Pnt3f(0, 1, 0);
+	cross_t.normalize();
+	float x = cross_t.x * orient_t.x +
+		cross_t.y * orient_t.y +
+		cross_t.z * orient_t.z;
+	float theta = radiansToDegrees(atan2(x, orient_t.y));
+
+	train->rotateDegree = theta;
+	train->rotateTo(diff);
+	qt = qt + 4 * orient_t;
+	train->moveTo(qt);
+
+	if(!doingShadows)
+	glColor3ub(50, 50, 50);
+	if(camera!=2)
+	train->render(false, false);
+
+	
+	int distance = 10;
+	for (size_t i = 0; i < carNum; i++)
+	{
+		int tempIndex = (index - (i+1) * distance + train->waypoints.size()) % train->waypoints.size();
+		Pnt3f qt = train->waypoints[tempIndex];
+		
+		Pnt3f diff = train->waypoints[tempIndex].getOrient(train->waypoints[(tempIndex + 1) % train->waypoints.size()]);
+		Pnt3f orient_t = train->wayorients[tempIndex];
+		orient_t.normalize();
+		cars[i]->up = orient_t;
+		Pnt3f cross_t = diff * Pnt3f(0,1,0);
+		cross_t.normalize();
+		float x = cross_t.x * orient_t.x +
+			cross_t.y * orient_t.y +
+			cross_t.z * orient_t.z ;
+		float theta = radiansToDegrees(atan2(x, orient_t.y));
+
+		cars[i]->rotateDegree = theta;
+		cars[i]->rotateTo(diff);
+		cars[i]->moveTo(qt + 2 * orient_t);
+
+
+		if (!doingShadows)
+			glColor3ub(50, 50, 50);
+		cars[i]->render(false, false);
+
+		for (size_t j = 0; j < humanNum; j++)
+		{
+			Pnt3f displace = humans[i * humanNum + j]->getDisplace();
+			Pnt3f right = diff * orient_t;
+			right.normalize();
+			humans[i * humanNum + j]->up = orient_t;
+			humans[i * humanNum + j]->rotateDegree = theta;
+			humans[i * humanNum + j]->rotateTo(diff);
+			humans[i * humanNum + j]->moveTo(qt+ orient_t*5+ diff* (j+ displace.x)+ right * displace.z);
+			if (!doingShadows)
+				glColor3ub(254, 225, 185);
+			if(!(camera==3&& i * humanNum + j==humanViewIndex))
+			humans[i * humanNum + j]->render(false, false);
+		}
+	}
+}
+
+void TrainView::drawStone() {
+	for (auto iter = stone.begin(); iter < stone.end(); iter++) {
+		(*iter)->Paint(ProjectionMatrex, ModelViewMatrex);
+	}
+}
+
+void TrainView::drawBuilding(bool doingShadows)
+{
+
+		if (!doingShadows) {
+			glColor3ub(140, 95, 40);
+		}
+		buildings[0]->render(false, false);
+		if (!doingShadows) {
+			glColor3ub(139, 139, 122);
+		}
+		buildings[1]->render(false, false);
+		if (!doingShadows) {
+			glColor3ub(79, 34, 1);
+		}
+		buildings[2]->render(false, false);
+}
+
+void TrainView::interpolation()
+{
+	if (m_pTrack->points.size() == 0)return;
+	type_spline = (spline_t)curve;
+	float stepArcLength = 2;
+	switch (type_spline) {
+	case spline_Linear:
+		train->interpolationLinear((Train::interpolation_t)type_interpolation, m_pTrack->points, stepArcLength, 500);
+		break;
+	case spline_CardinalCubic:
+		train->interpolationCardinalCubic((Train::interpolation_t)type_interpolation, m_pTrack->points,CardinalMatrix, stepArcLength, 500);
+		break;
+	case spline_CubicB_Spline:
+		train->interpolationCubicB_Spline((Train::interpolation_t)type_interpolation, m_pTrack->points, BSplineMatrix, stepArcLength,5000);
+		break;
+	default:
+		train->interpolationLinear((Train::interpolation_t)type_interpolation, m_pTrack->points, stepArcLength, 500);
+		break;
+	}
+}
+void TrainView::insertCar()
+{
+	carNum++;
+	cars.push_back(new Model(sampleCar));
+	humans.push_back(new Human(sampleHuman));
+}
+void TrainView::deleteCar()
+{
+	if (carNum == 0)return;
+	carNum--;
+	cars.erase(cars.begin() + cars.size() - 1);
+	humans.erase(humans.begin() + humans.size() - 1);
+	if (humanViewIndex == humans.size()) frontHuman();
+}
+void TrainView::frontHuman()
+{
+	humanViewIndex--;
+	if (humanViewIndex < 0)humanViewIndex = 0;
+}
+void TrainView::behindHuman()
+{
+	humanViewIndex++;
+	if (humanViewIndex >= humans.size())humanViewIndex = humans.size()-1;
+	if (humanViewIndex < 0)humanViewIndex = 0;
+}
+void TrainView::drawTrain(float t)
+{
+	t *= m_pTrack->points.size();
+	size_t i = t;
+	t -= i;
+	// for (i = 0; t > 1; t -= 1, i++) i++;
+	Pnt3f cp_pos_p1 = m_pTrack->points[i].pos;
+	Pnt3f cp_pos_p2 = m_pTrack->points[(i + 1) % m_pTrack->points.size()].pos;
+
+	// orient
+	Pnt3f cp_orient_p1 = m_pTrack->points[i].orient;
+	Pnt3f cp_orient_p2 = m_pTrack->points[(i + 1) % m_pTrack->points.size()].orient;
+	Pnt3f qt, orient_t;
+	switch (type_spline) {
+	case spline_Linear:
+		// Linear
+		qt = (1 - t) * cp_pos_p1 + t * cp_pos_p2;
+		orient_t = (1 - t) * cp_orient_p1 + t * cp_orient_p2;
+		break;
+	}
+	glColor3ub(255, 255, 255);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.0f, 0.0f);
+	glVertex3f(qt.x - 5, qt.y - 5, qt.z - 5);
+	glTexCoord2f(1.0f, 0.0f);
+	glVertex3f(qt.x + 5, qt.y - 5, qt.z - 5);
+	glTexCoord2f(1.0f, 1.0f);
+	glVertex3f(qt.x + 5, qt.y + 5, qt.z - 5);
+	glTexCoord2f(0.0f, 1.0f);
+	glVertex3f(qt.x - 5, qt.y + 5, qt.z - 5);
+	glEnd();
 }
 
 void TrainView::

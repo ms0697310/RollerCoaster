@@ -21,6 +21,7 @@ AppMain::AppMain(QWidget *parent)
 	this->trainview->track = 0;
 	this->trainview->curve = 0;
 	this->trainview->isrun = false;
+	this->trainview->interpolation();
 
 	setWindowTitle( "Roller Coaster" );
 
@@ -32,6 +33,7 @@ AppMain::AppMain(QWidget *parent)
 	connect( ui.aWorld		,SIGNAL(triggered()),this,SLOT(ChangeCamToWorld())	);
 	connect( ui.aTop		,SIGNAL(triggered()),this,SLOT(ChangeCamToTop())	);
 	connect( ui.aTrain		,SIGNAL(triggered()),this,SLOT(ChangeCamToTrain())	);
+	connect( ui.aHuman		,SIGNAL(triggered()),this,SLOT(ChangeCamToHuman())  );
 
 	connect( ui.comboCurve	,SIGNAL(currentIndexChanged(QString)),this,SLOT(ChangeCurveType(QString)));
 	connect( ui.aLinear		,SIGNAL(triggered()),this,SLOT(ChangeCurveToLinear())	);
@@ -52,6 +54,24 @@ AppMain::AppMain(QWidget *parent)
 	connect( ui.rcpxsub		,SIGNAL(clicked()),this,SLOT(RotateControlPointSubX())				);
 	connect( ui.rcpzadd		,SIGNAL(clicked()),this,SLOT(RotateControlPointAddZ())					);
 	connect( ui.rcpzsub		,SIGNAL(clicked()),this,SLOT(RotateControlPointSubZ())				);
+	connect( ui.car_add, SIGNAL(clicked()), this, SLOT(AddCar()));
+	connect( ui.car_sub, SIGNAL(clicked()), this, SLOT(SubCar()));
+	connect(ui.mcpyadd, SIGNAL(clicked()), this, SLOT(MoveControlPointAddY()));
+	connect(ui.mcpysub, SIGNAL(clicked()), this, SLOT(MoveControlPointSubY()));
+	connect(ui.peopleadd, SIGNAL(clicked()), this, SLOT(AddPeopleView()));
+	connect(ui.peoplesub, SIGNAL(clicked()), this, SLOT(SubPeopleView()));
+	connect(ui.paraadd, SIGNAL(clicked()), this, SLOT(AddPara()));
+	connect(ui.parasub, SIGNAL(clicked()), this, SLOT(SubPara()));
+
+	connect(ui.humanview_up, SIGNAL(clicked()), this, SLOT(MoveHumanViewUp()));
+	connect(ui.humanview_down, SIGNAL(clicked()), this, SLOT(MoveHumanViewDown()));
+	connect(ui.humanview_left, SIGNAL(clicked()), this, SLOT(MoveHumanViewLeft()));
+	connect(ui.humanview_right, SIGNAL(clicked()), this, SLOT(MoveHumanViewRight()));
+	connect(ui.humanview_turn_left, SIGNAL(clicked()), this, SLOT(RotateHumanViewLeft()));
+	connect(ui.humanview_turn_right, SIGNAL(clicked()), this, SLOT(RotateHumanViewRight()));
+
+
+	initPath();
 }
 
 AppMain::~AppMain()
@@ -122,6 +142,7 @@ bool AppMain::eventFilter(QObject *watched, QEvent *e) {
 			cp->pos.x = (float) rx;
 			cp->pos.y = (float) ry;
 			cp->pos.z = (float) rz;
+			trainview->interpolation();
 		}
 		if(trainview->arcball.mode != trainview->arcball.None) { // we're taking the drags
 			float x,y;
@@ -135,6 +156,15 @@ bool AppMain::eventFilter(QObject *watched, QEvent *e) {
 		// Set up the mode
 		if (event->key() == Qt::Key_Alt) 
 			this->canpan = true;
+		//if (this->trainview->camera == 3 && 
+		if(	this->trainview->humanViewIndex < this->trainview->humans.size())
+		{
+			int index = this->trainview->humanViewIndex;
+			if (event->key() == Qt::Key_W) this->trainview->humans[index]->goForward();
+			if (event->key() == Qt::Key_A) this->trainview->humans[index]->goLeft();
+			if (event->key() == Qt::Key_S) this->trainview->humans[index]->goBackward();
+			if (event->key() == Qt::Key_D) this->trainview->humans[index]->goRight();
+		}
 	}
 
 	return QWidget::eventFilter(watched, e);
@@ -185,6 +215,7 @@ void AppMain::LoadTrackPath()
 	{
 		this->m_Track.readPoints(fname);
 	}
+	this->trainview->interpolation();
 }
 
 void AppMain::SaveTrackPath()
@@ -241,6 +272,12 @@ void AppMain::ChangeCameraType( QString type )
 		this->trainview->camera = 2;
 		update();
 	}
+	else if (type == "Human")
+	{
+		this->trainview->camera = 3;
+		ui.humanview_up->setEnabled(true);
+		update();
+	}
 }
 
 void AppMain::ChangeCurveType( QString type )
@@ -257,8 +294,7 @@ void AppMain::ChangeCurveType( QString type )
 	{
 		this->trainview->curve = 2;
 	}
-
-
+	this->trainview->interpolation();
 }
 
 void AppMain::ChangeTrackType( QString type )
@@ -280,7 +316,7 @@ void AppMain::ChangeTrackType( QString type )
 static unsigned long lastRedraw = 0;
 void AppMain::SwitchPlayAndPause()
 {
-	if( !this->trainview->isrun )
+	if( this->trainview->isrun )
 	{
 		ui.bPlay->setIcon(QIcon(":/AppMain/Resources/Icons/play.ico"));
 		this->trainview->isrun = !this->trainview->isrun;
@@ -301,7 +337,7 @@ void AppMain::SwitchPlayAndPause()
 
 void AppMain::ChangeSpeedOfTrain( int val )
 {
-	//m_rollerCoaster->trainSpeed = m_rollerCoaster->MAX_TRAIN_SPEED * float(val) / 100.0f;
+	trainview->train->trainSpeed = trainview->train->MAX_TRAIN_SPEED * float(val) / 100.0f;
 }
 
 void AppMain::AddControlPoint()
@@ -324,6 +360,7 @@ void AppMain::AddControlPoint()
 		if (this->m_Track.trainU >= npts) this->m_Track.trainU -= npts;
 	}
 	this->damageMe();
+	this->trainview->interpolation();
 }
 
 void AppMain::DeleteControlPoint()
@@ -335,6 +372,7 @@ void AppMain::DeleteControlPoint()
 			this->m_Track.points.pop_back();
 	}
 	this->damageMe();
+	this->trainview->interpolation();
 }
 
 
@@ -353,16 +391,27 @@ void AppMain::rollx(float dir)
 		this->m_Track.points[s].orient.z = si * old.y + co * old.z;
 	}
 	this->damageMe();
-} 
+}
+void AppMain::movey(float height)
+{
+	int s = this->trainview->selectedCube;
+	if (s >= 0) {
+		this->m_Track.points[s].pos.y += height;
+	}
+	this->damageMe();
+}
+
 
 void AppMain::RotateControlPointAddX()
 {
 	rollx(1);
+	this->trainview->interpolation();
 }
 
 void AppMain::RotateControlPointSubX()
 {
 	rollx(-1);
+	this->trainview->interpolation();
 }
 
 void AppMain::rollz(float dir)
@@ -379,16 +428,97 @@ void AppMain::rollz(float dir)
 		this->m_Track.points[s].orient.x = si * old.y + co * old.x;
 	}
 	this->damageMe();
-} 
+}
+
+void AppMain::humanViewEnableOrDisable(bool enable)
+{
+}
+
 
 void AppMain::RotateControlPointAddZ()
 {
 	rollz(1);
+	this->trainview->interpolation();
 }
 
 void AppMain::RotateControlPointSubZ()
 {
 	rollz(-1);
+	this->trainview->interpolation();
+}
+
+void AppMain::MoveControlPointAddY()
+{
+	movey(1);
+	this->trainview->interpolation();
+}
+
+void AppMain::MoveControlPointSubY()
+{
+	movey(-1);
+	this->trainview->interpolation();
+}
+
+void AppMain::AddCar()
+{
+	trainview->insertCar();
+}
+
+void AppMain::SubCar()
+{
+	trainview->deleteCar();
+}
+
+void AppMain::AddPara()
+{
+	trainview->CardinalTao += 0.1;
+	trainview->initSplineMatrix(trainview->CardinalTao);
+	trainview->interpolation();
+}
+
+void AppMain::SubPara()
+{
+	trainview->CardinalTao -= 0.1;
+	trainview->initSplineMatrix(trainview->CardinalTao);
+	trainview->interpolation();
+}
+
+void AppMain::AddPeopleView()
+{
+	trainview->behindHuman();
+}
+
+void AppMain::SubPeopleView()
+{
+	trainview->frontHuman();
+}
+
+void AppMain::MoveHumanViewUp()
+{
+	trainview->humans[trainview->humanViewIndex]->goForward();
+}
+
+void AppMain::MoveHumanViewDown()
+{
+	trainview->humans[trainview->humanViewIndex]->goBackward();
+}
+
+void AppMain::MoveHumanViewLeft()
+{
+	trainview->humans[trainview->humanViewIndex]->goLeft();
+}
+
+void AppMain::MoveHumanViewRight()
+{
+	trainview->humans[trainview->humanViewIndex]->goRight();
+}
+
+void AppMain::RotateHumanViewLeft()
+{
+}
+
+void AppMain::RotateHumanViewRight()
+{
 }
 
 void AppMain::ChangeCamToWorld()
@@ -404,6 +534,11 @@ void AppMain::ChangeCamToTop()
 void AppMain::ChangeCamToTrain()
 {
 	this->trainview->camera = 2;
+}
+
+void AppMain::ChangeCamToHuman()
+{
+	this->trainview->camera = 3;
 }
 
 void AppMain::ChangeCurveToLinear()
@@ -436,11 +571,24 @@ void AppMain::ChangeTrackToRoad()
 	this->trainview->track = 2;
 }
 
+void AppMain::initPath()
+{
+	QString fileName = "./Track/init.txt";
+	QByteArray byteArray = fileName.toLocal8Bit();
+	const char* fname = byteArray.data();
+	if (!fileName.isEmpty())
+	{
+		this->m_Track.readPoints(fname);
+	}
+	this->trainview->interpolation();
+}
+
 void AppMain::UpdateCameraState( int index )
 {
 	ui.aWorld->setChecked( (index==0)?true:false );
 	ui.aTop	 ->setChecked( (index==1)?true:false );
 	ui.aTrain->setChecked( (index==2)?true:false );
+	ui.aHuman->setChecked( (index==3)?true:false );
 }
 
 void AppMain::UpdateCurveState( int index )
@@ -477,9 +625,17 @@ damageMe()
 //========================================================================
 void AppMain::
 advanceTrain(float dir)
-//========================================================================
 {
-	//#####################################################################
-	// TODO: make this work for your train
-	//#####################################################################
+	//trainview->t_time += (dir / trainview->train->waypoints.size());
+	trainview->t_time += (dir / (trainview->train->waypoints.size()/trainview->train->trainSpeed));
+	//trainview->t_time += (dir / m_Track.points.size() / (trainview->DIVIDE_LINE) );
+	if (trainview->t_time > 1.0f)
+		trainview->t_time -= 1.0f;
+	if (this->trainview->isrun) {
+		if (clock() - lastRedraw > CLOCKS_PER_SEC / 30) {
+			lastRedraw = clock();
+			this->advanceTrain();
+			this->damageMe();
+		}
+	}
 }

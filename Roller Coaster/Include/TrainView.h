@@ -1,16 +1,27 @@
 #ifndef TRAINVIEW_H  
-#define TRAINVIEW_H  
+#define TRAINVIEW_H
+
 #include <QGLWidget> 
-#include <QtGui>  
+#include <QtGui>
 #include <QtOpenGL>  
 #include <GL/GLU.h>
+#include <QtMultimedia/QMediaPlayer>
 #pragma comment(lib,"opengl32.lib")
 #pragma comment(lib,"glu32.lib") 
 #include "Utilities/ArcBallCam.H"
 #include "Utilities/3DUtils.H"
 #include "Track.H"
+#include "Human.h"
 #include "Triangle.h"
 #include "Square.h"
+#include "Wave.h"
+#include "Train.h"
+#include "Hill.h"
+#include "Stone.h"
+#include "Tunnel.h"
+#include "BackGround.h"
+#include <iostream>
+#include <vector>
 
 class AppMain;
 class CTrack;
@@ -39,7 +50,19 @@ public:
 	// we're drawing shadows (no colors, for example)
 	void drawStuff(bool doingShadows=false);
 	void drawTrack(bool doingShadows);
+	void drawTrain(float);
+	void drawTrainObj(float);
+	void drawTrainObj2(float, bool doingShadows);
+	void drawStone();
+	void drawBuilding(bool doingShadows);
+	void interpolation();
+	void insertCar();
+	void deleteCar();
+	//for human view change
+	void frontHuman();
+	void behindHuman();
 
+	//void drawTrain();
 	// setup the projection - assuming that the projection stack has been
 	// cleared for you
 	void setProjection();
@@ -52,7 +75,7 @@ public:
 
 	void initializeGL();
 	void initializeTexture();
-
+	void initSplineMatrix(float CardinalScale = 0.5);
 
 public:
 	ArcBallCam		arcball;			// keep an ArcBall for the UI
@@ -60,6 +83,8 @@ public:
 
 	CTrack*			m_pTrack;		// The track of the entire scene
 
+	QTime frameTime;
+	int frameCount;
 	float t_time;
 	unsigned int DIVIDE_LINE;
 	unsigned int BOARD_DISTANCE_LENGTH;
@@ -69,18 +94,44 @@ public:
 		spline_CardinalCubic = 1,
 		spline_CubicB_Spline = 2
 	} spline_t;
+	typedef enum {
+		DivideLine,
+		ArcLength
+	} interpolation_t;
 
-
+	vector<Pnt3f>waypoints;
+	Train* train;
+	int carNum;
+	int humanNum;
+	int humanViewIndex;
+	vector<Model*> buildings;
+	Model sampleCar;
+	Human sampleHuman;
+	vector<Model*> cars;
+	vector<Human*> humans;
+	QMediaPlayer* player;
 	int camera;
 	int curve;
 	int track;
 	bool isrun;
 	Triangle* triangle;
 	Square* square;
+	Wave* wave;
+	Hill* hill;
+	BackGround* bg;
+	Tunnel* tunnel;
+	std::vector<Stone*> stone;
 	GLfloat ProjectionMatrex[16];
 	GLfloat ModelViewMatrex[16];
 	QVector<QOpenGLTexture*> Textures;
 
+	spline_t type_spline;
+	interpolation_t type_interpolation;
 
+	int trainLineIndex;
+	unsigned int trainLineILength;
+	float BSplineMatrix[4][4];
+	float CardinalTao;
+	float CardinalMatrix[4][4];
 };  
 #endif // TRAINVIEW_H  
